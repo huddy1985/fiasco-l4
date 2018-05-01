@@ -1,0 +1,6 @@
+Name: drivers_uart
+Version: 0
+Description: L4 library
+
+Libs: -ldrivers_uart
+Requires:  

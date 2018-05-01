@@ -1,0 +1,7 @@
+incdir=/empty_incdir
+Name: libio-io
+Version: 0
+Description: L4 library
+Cflags: -I${incdir}/libio-io 
+Libs: -lio-io
+Requires: libio-vbus  

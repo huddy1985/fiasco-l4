@@ -1,0 +1,6 @@
+Name: libedid
+Version: 0
+Description: L4 library
+
+Libs: -ledid
+Requires:  

@@ -1,0 +1,6 @@
+Name: libdrivers-nand
+Version: 0
+Description: L4 library
+
+Libs: -larm_nand.o
+Requires:  

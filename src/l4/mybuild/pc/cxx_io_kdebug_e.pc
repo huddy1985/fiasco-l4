@@ -1,0 +1,6 @@
+Name: cxx_io_kdebug_e
+Version: 0
+Description: L4 library
+
+Libs: -lcxx_io_kdebug_e
+Requires:  

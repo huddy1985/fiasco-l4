@@ -1,0 +1,1 @@
+CXXFLAGS_alloc_list.cc := -DL4_NO_RTTI -Wall -fno-exceptions -fno-rtti

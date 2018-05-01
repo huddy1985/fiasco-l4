@@ -1,0 +1,494 @@
+# vi:set ft=kconfig:
+# This Kconfig is auto-generated.
+mainmenu "L4Re Configuration"
+
+config KERNELVERSION
+        string
+	option env="KERNELVERSION"
+
+config ARCH_ENABLE_STACK_PROTECTOR
+	bool
+
+choice
+	prompt "Target Architecture"
+#  ARCH_CHOICE_DEFAULT
+	default BUILD_ARCH_x86
+	help
+	  Specify for which processor architecture you want to build.
+
+#  ARCH_CHOICE
+config BUILD_ARCH_amd64
+	bool "AMD64 architecture"
+	select ARCH_ENABLE_STACK_PROTECTOR
+
+config BUILD_ARCH_arm
+	bool "ARM architecture"
+	select ARCH_ENABLE_STACK_PROTECTOR
+
+config BUILD_ARCH_arm64
+	bool "ARM64 architecture (AArch64)"
+	select ARCH_ENABLE_STACK_PROTECTOR
+
+config BUILD_ARCH_mips
+	bool "MIPS architecture"
+	select ARCH_ENABLE_STACK_PROTECTOR
+
+config BUILD_ARCH_ppc32
+	bool "PowerPC 32 architecture (EXPERIMENTAL!)"
+
+config BUILD_ARCH_sparc
+	bool "Sparc architecture (EXPERIMENTAL)"
+
+config BUILD_ARCH_x86
+	bool "X86-32 architecture"
+	select ARCH_ENABLE_STACK_PROTECTOR
+
+
+endchoice
+
+config BUILD_ARCH
+	string
+# ARCH_NAME
+	default "amd64"  if BUILD_ARCH_amd64
+	default "arm"  if BUILD_ARCH_arm
+	default "arm64"  if BUILD_ARCH_arm64
+	default "mips"  if BUILD_ARCH_mips
+	default "ppc32"  if BUILD_ARCH_ppc32
+	default "sparc"  if BUILD_ARCH_sparc
+	default "x86"  if BUILD_ARCH_x86
+
+# currently we have nothing for abi linux, so just do not offer this option
+#choice
+#	prompt "ABI"
+#	default BUILD_ABI_l4f
+#
+#config BUILD_ABI_l4f
+#	bool "L4/Fiasco"
+#
+#config BUILD_ABI_linux
+#	bool "Linux"
+#
+#endchoice
+config BUILD_ABI_l4f
+	def_bool y
+
+
+config BUILD_ABI
+	string
+	default "l4f"   if BUILD_ABI_l4f
+	default "linux" if BUILD_ABI_linux
+
+# PF_INCLUDE
+if BUILD_ARCH_arm
+	source "./mk/arch/Kconfig.arm.inc"
+endif
+if BUILD_ARCH_arm64
+	source "./mk/arch/Kconfig.arm64.inc"
+endif
+if BUILD_ARCH_x86 || BUILD_ARCH_amd64
+	source "./mk/arch/Kconfig.ia32.inc"
+endif
+if BUILD_ARCH_mips
+	source "./mk/arch/Kconfig.mips.inc"
+endif
+if BUILD_ARCH_ppc32
+	source "./mk/arch/Kconfig.ppc32.inc"
+endif
+if BUILD_ARCH_sparc
+	source "./mk/arch/Kconfig.sparc.inc"
+endif
+config BSP_NAME
+	string
+
+choice
+	prompt "Platform Selection"
+
+config PLATFORM_TYPE_exynos4
+  bool "Samsung Exynos4"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_boston
+  bool "Boston"
+  depends on BUILD_ARCH_mips
+
+config PLATFORM_TYPE_imx35
+  bool "Freescale i.MX35"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_zedboard
+  bool "Xilinx Zynq Zedboard"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_parallella
+  bool "Parallella Board"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_rv_pbx
+  bool "ARM Realview PBX"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_exynos5
+  bool "Samsung Exynos5"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_kirkwood
+  bool "Marvell Kirkwood"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_imx21
+  bool "Freescale i.MX21"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_pandaboard
+  bool "Pandaboard"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_baikal_t
+  bool "Baikal-T"
+  depends on BUILD_ARCH_mips
+
+config PLATFORM_TYPE_tegra3
+  bool "Nvidia Tegra 3"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_tegra2
+  bool "Nvidia Tegra 2"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_mpc5200
+  bool "MPC5200"
+  depends on BUILD_ARCH_ppc32
+
+config PLATFORM_TYPE_malta
+  bool "Malta"
+  depends on BUILD_ARCH_mips
+
+config PLATFORM_TYPE_rv
+  bool "ARM Realview (Generic)"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_cubieboard2
+  bool "CubieBoard 2"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_omap3_am33xx
+  bool "TI OMAP AM33xx"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_ls1012afrdm
+  bool "NXP LS1012A-FRDM"
+  depends on BUILD_ARCH_arm || BUILD_ARCH_arm64
+
+config PLATFORM_TYPE_leon3
+  bool "Sparc Leon3"
+  depends on BUILD_ARCH_sparc
+
+config PLATFORM_TYPE_rpi_b
+  bool "Raspberry Pi, Model B"
+  depends on BUILD_ARCH_arm || BUILD_ARCH_arm64
+
+config PLATFORM_TYPE_rv_vexpress_a15
+  bool "ARM Versatile Express A15"
+  depends on BUILD_ARCH_arm || BUILD_ARCH_arm64
+
+config PLATFORM_TYPE_imx51
+  bool "Freescale i.MX51"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_ls1021atwr
+  bool "NXP TWR-LS1021A"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_imx7
+  bool "NXP i.MX7"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_imx28
+  bool "Freescale i.MX28"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_omap3evm
+  bool "TI OMAP3EVM"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_sead3
+  bool "Sead3"
+  depends on BUILD_ARCH_mips
+
+config PLATFORM_TYPE_pc
+  bool "PC"
+  depends on BUILD_ARCH_x86 || BUILD_ARCH_amd64
+
+config PLATFORM_TYPE_ci20
+  bool "Creator Ci20"
+  depends on BUILD_ARCH_mips
+
+config PLATFORM_TYPE_rcar3_m3
+  bool "Renesas R-Car Gen3 M3"
+  depends on BUILD_ARCH_arm || BUILD_ARCH_arm64
+
+config PLATFORM_TYPE_zynqmp
+  bool "Xilinx Zynq UltraSCALE+ MPSoC"
+  depends on BUILD_ARCH_arm || BUILD_ARCH_arm64
+
+config PLATFORM_TYPE_beagleboard
+  bool "Beagleboard"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_imx6
+  bool "Freescale i.MX6"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_ci40
+  bool "Creator Ci40"
+  depends on BUILD_ARCH_mips
+
+config PLATFORM_TYPE_imx6ul
+  bool "NXP i.MX6UL"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_armada38x
+  bool "Marvell Armada 38x"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_omap5
+  bool "OMAP5 EVM"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_rv_vexpress
+  bool "ARM Versatile Express"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_rpi_a
+  bool "Raspberry Pi, Model A"
+  depends on BUILD_ARCH_arm
+
+config PLATFORM_TYPE_integrator
+  bool "ARM Integrator"
+  depends on BUILD_ARCH_arm
+
+
+config PLATFORM_TYPE_custom
+	bool "Custom platform"
+	help
+	  Define your own platform, alternatively define the following
+	  in conf/platforms/yourname.conf:
+	    PLATFORM_RAM_BASE    = 0
+	    PLATFORM_RAM_SIZE_MB = 64
+
+
+endchoice
+
+if PLATFORM_TYPE_custom
+
+menu "Custom Platform Definition"
+
+config PLATFORM_TYPE
+	string "Name of your platform"
+
+config PLATFORM_RAM_BASE
+	hex "Start of RAM"
+	default 0x0
+	help
+	  Hexadecimal physical address where RAM memory starts on the
+	  platform.
+
+config PLATFORM_RAM_SIZE_MB
+	int "RAM-Memory available on the platform in MB"
+	default 128
+
+config PLATFORM_UART_NR
+	int "Select UART to use"
+	default 0
+
+endmenu # Custom platform
+endif
+
+config PLATFORM_TYPE
+  string
+  default "exynos4" if PLATFORM_TYPE_exynos4
+  default "boston" if PLATFORM_TYPE_boston
+  default "imx35" if PLATFORM_TYPE_imx35
+  default "zedboard" if PLATFORM_TYPE_zedboard
+  default "parallella" if PLATFORM_TYPE_parallella
+  default "rv_pbx" if PLATFORM_TYPE_rv_pbx
+  default "exynos5" if PLATFORM_TYPE_exynos5
+  default "kirkwood" if PLATFORM_TYPE_kirkwood
+  default "imx21" if PLATFORM_TYPE_imx21
+  default "pandaboard" if PLATFORM_TYPE_pandaboard
+  default "baikal_t" if PLATFORM_TYPE_baikal_t
+  default "tegra3" if PLATFORM_TYPE_tegra3
+  default "tegra2" if PLATFORM_TYPE_tegra2
+  default "mpc5200" if PLATFORM_TYPE_mpc5200
+  default "malta" if PLATFORM_TYPE_malta
+  default "rv" if PLATFORM_TYPE_rv
+  default "cubieboard2" if PLATFORM_TYPE_cubieboard2
+  default "omap3_am33xx" if PLATFORM_TYPE_omap3_am33xx
+  default "ls1012afrdm" if PLATFORM_TYPE_ls1012afrdm
+  default "leon3" if PLATFORM_TYPE_leon3
+  default "rpi_b" if PLATFORM_TYPE_rpi_b
+  default "rv_vexpress_a15" if PLATFORM_TYPE_rv_vexpress_a15
+  default "imx51" if PLATFORM_TYPE_imx51
+  default "ls1021atwr" if PLATFORM_TYPE_ls1021atwr
+  default "imx7" if PLATFORM_TYPE_imx7
+  default "imx28" if PLATFORM_TYPE_imx28
+  default "omap3evm" if PLATFORM_TYPE_omap3evm
+  default "sead3" if PLATFORM_TYPE_sead3
+  default "pc" if PLATFORM_TYPE_pc
+  default "ci20" if PLATFORM_TYPE_ci20
+  default "rcar3_m3" if PLATFORM_TYPE_rcar3_m3
+  default "zynqmp" if PLATFORM_TYPE_zynqmp
+  default "beagleboard" if PLATFORM_TYPE_beagleboard
+  default "imx6" if PLATFORM_TYPE_imx6
+  default "ci40" if PLATFORM_TYPE_ci40
+  default "imx6ul" if PLATFORM_TYPE_imx6ul
+  default "armada38x" if PLATFORM_TYPE_armada38x
+  default "omap5" if PLATFORM_TYPE_omap5
+  default "rv_vexpress" if PLATFORM_TYPE_rv_vexpress
+  default "rpi_a" if PLATFORM_TYPE_rpi_a
+  default "integrator" if PLATFORM_TYPE_integrator
+
+
+config USE_DROPS_STDDIR
+	def_bool n
+
+config USE_DICE
+	def_bool n
+
+config DROPS_STDDIR
+	string
+	default "/path/to/l4re"
+
+config DROPS_INSTDIR
+	string
+	default "/path/to/l4re"
+
+config BID_COLORED_PHASES
+	bool
+	default y
+
+menu "Building"
+
+config YACC
+	string
+	default "yacc"
+
+config LEX
+	string
+	default "flex"
+
+config CTAGS
+	string
+	default "ctags"
+
+config ETAGS
+	string
+	default "etags"
+
+
+config HAVE_LDSO
+	def_bool y
+
+config INT_CPP_NAME_SWITCH
+	bool "Automatically determine internal gcc preprocessor names"
+	default y
+
+config INT_LD_NAME_SWITCH
+	bool "Automatically determine internal ld names"
+	default y
+
+config INT_PP_NAME
+	string "Internal name of the compiler preprocessor"
+	default "cpp0"
+	depends on !INT_CPP_NAME_SWITCH
+
+config INT_LD_NAME
+	string "Internal name of the compiler linker"
+	default "ld"
+	depends on !INT_LD_NAME_SWITCH
+
+
+config BID_STRIP_PROGS
+	bool "Strip binaries on install"
+	help
+	  If enabled, binaries will be stripped on installation into
+	  $(L4DIR)/bin or $(DROPS_STDDIR)/bin. If you want to load them with
+	  all their symbols (eg to show the symbols with the Fiasco kernel
+	  debugger), say 'N' here.
+
+	  If unsure, say 'Y'.
+
+config BID_GCC_OMIT_FP
+	bool "GCC: Omit Frame-pointers"
+	default y
+	help
+	  If enabled, gcc will be passed the '-fomit-frame-pointer' cmdline
+	  option, adding an additional register to the register set for the
+	  generated code. Programs will be faster, but backtraces cannot be
+	  done, seriously hindering debugging.
+
+	  If unsure, say 'Y'.
+
+config BID_GCC_ENABLE_STACK_PROTECTOR
+    bool "GCC: enable stack protector"
+    default y if ARCH_ENABLE_STACK_PROTECTOR
+    help
+      If enabled, support for the gcc stack protector will be enabled.
+      The stack protector uses stack canaries to detect stack smashing
+      attacks (see "man gcc" for details). In L4Re the stack protector is
+      enabled only for packages that are linked against the full uclibc.
+      Enabling this feature will add some overhead, but increase security.
+
+      If unsure, say 'Y'.
+
+choice
+    prompt "GCC: Enable stack protector"
+    depends on BID_GCC_ENABLE_STACK_PROTECTOR
+    default BID_GCC_STACK_PROTECTOR
+
+config BID_GCC_STACK_PROTECTOR_ALL
+    bool "on all functions"
+    help
+        If enabled, '-fstack-protector-all' flag is used for gcc. This
+        option adds significant overhead, as the stack canary is checked on
+        every function return. See "man gcc" for details.
+
+config BID_GCC_STACK_PROTECTOR
+    bool "exclusively for functions with vulnerable objects"
+    help
+        If enabled, '-fstack-protector' flag is passed to gcc. If this
+        flag is set, gcc will add stack canaries to vulnerable functions, such as
+        functions that call "alloca", and functions with buffers larger than 8
+        bytes.
+
+endchoice
+
+config BID_GENERATE_MAPFILE
+	bool #"Generate Map-files for binaries"
+	help
+	  Enabling this option will generate map-files together with the
+	  binaries. This might be handy for debugging purposes. See ld(1)
+	  for details on mapfiles.
+
+          If unsure, say N.
+
+config BID_BUILD_DOC
+	bool "Build doc directories"
+	help
+	  Say Y if you also want to build the doc directories.
+
+config RELEASE_MODE
+	bool "Enable RELEASE flag"
+	help
+	  Enable to leave out debugging and other code normally not needed.
+
+	  Say N.
+
+config MAKECONFS_ADD
+	string "Additional Makeconf files"
+	help
+	  List of white space separated suffixes of Makeconf files
+	  which will be included in every source directory as
+	  Makeconf.<suffix>.
+
+endmenu

@@ -1,0 +1,6 @@
+Name: x86emu_int10
+Version: 0
+Description: L4 library
+
+Libs: -lx86emu_int10
+Requires: libio x86emu libedid  

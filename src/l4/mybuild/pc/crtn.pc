@@ -1,0 +1,6 @@
+Name: crtn
+Version: 0
+Description: L4 library
+
+Libs: -lcrt0 -lcrt0_eh.o -lcrt0_s
+Requires:  

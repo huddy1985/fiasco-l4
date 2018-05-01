@@ -1,0 +1,1 @@
+CXXFLAGS_alloc_list.e.cc := -Wall

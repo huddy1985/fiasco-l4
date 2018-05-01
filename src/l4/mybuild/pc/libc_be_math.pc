@@ -1,0 +1,7 @@
+Name: libc_be_math
+Version: 0
+Description: L4 library
+
+Libs: -lm_support
+Requires: libc  
+Link_libs= %{static:-lm_support}

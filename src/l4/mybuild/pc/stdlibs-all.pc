@@ -1,0 +1,4 @@
+Name: stdlibs-all
+Version: 0
+Description: Alias Dependency Package
+Requires: l4sys l4re l4re-util libc_be_l4refile libc_be_l4re

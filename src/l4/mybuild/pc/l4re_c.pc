@@ -1,0 +1,6 @@
+Name: l4re_c
+Version: 0
+Description: L4 library
+
+Libs: -l4re-c
+Requires: l4re  

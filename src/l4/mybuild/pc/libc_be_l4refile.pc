@@ -1,0 +1,7 @@
+Name: libc_be_l4refile
+Version: 0
+Description: L4 library
+
+Libs: -lc_be_l4refile
+Requires: l4re libsupc++  
+Link_Libs= %{static:-lc_be_l4refile}

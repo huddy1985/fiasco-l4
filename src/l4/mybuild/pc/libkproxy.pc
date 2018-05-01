@@ -1,0 +1,6 @@
+Name: libkproxy
+Version: 0
+Description: L4 library
+
+Libs: -lkproxy
+Requires:  

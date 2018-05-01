@@ -1,0 +1,1 @@
+CXXFLAGS_iob_write.cc := -DL4_NO_RTTI -Wall -fno-exceptions -fno-rtti

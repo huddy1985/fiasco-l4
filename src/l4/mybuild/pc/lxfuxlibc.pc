@@ -1,0 +1,6 @@
+Name: lxfuxlibc
+Version: 0
+Description: L4 library
+
+Libs: -lclxfux.o
+Requires:  

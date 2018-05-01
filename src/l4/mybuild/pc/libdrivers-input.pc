@@ -1,0 +1,6 @@
+Name: libdrivers-input
+Version: 0
+Description: L4 library
+
+Libs: -larm_input.o
+Requires: l4re_c-util libio  

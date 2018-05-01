@@ -1,0 +1,7 @@
+Name: libc_minimal_l4re
+Version: 0
+Description: L4 library
+
+Libs: -luc_c_minimal_l4re
+Requires:  
+Link_Libs= %{static:-luc_c_minimal_l4re}

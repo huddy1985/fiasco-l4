@@ -1,0 +1,1 @@
+CXXFLAGS_iob_write.e.cc := -Wall

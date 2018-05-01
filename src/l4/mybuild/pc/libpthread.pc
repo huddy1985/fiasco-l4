@@ -1,0 +1,6 @@
+Name: libpthread
+Version: 0
+Description: L4 library
+
+Libs: --whole-archive -lpthread --no-whole-archive
+Requires:  

@@ -1,0 +1,6 @@
+Name: libstdc++
+Version: 0
+Description: L4 library
+
+Libs: -lstdc++
+Requires: libsupc++  

@@ -1,0 +1,7 @@
+incdir=/empty_incdir
+Name: acpica
+Version: 0
+Description: L4 library
+Cflags: -I${incdir}/acpica 
+Libs: -lacpica
+Requires:  

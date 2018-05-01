@@ -1,0 +1,6 @@
+Name: cxx_atexit
+Version: 0
+Description: L4 library
+
+Libs: -lcxx_atexit
+Requires:  

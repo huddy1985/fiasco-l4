@@ -1,0 +1,5 @@
+incdir=/empty_incdir
+Name: drivers-frst
+Version: 0
+Description: L4 library
+Cflags: -I${incdir}/drivers 

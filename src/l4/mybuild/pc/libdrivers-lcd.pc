@@ -1,0 +1,6 @@
+Name: libdrivers-lcd
+Version: 0
+Description: L4 library
+
+Libs: -larm_lcd.o
+Requires: libio l4re_c l4re_c-util libdrivers-generic  

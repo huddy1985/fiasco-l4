@@ -1,0 +1,4 @@
+Name: stdlibs
+Version: 0
+Description: Alias Dependency Package
+Requires: stdlibs-all libl4re-vfs

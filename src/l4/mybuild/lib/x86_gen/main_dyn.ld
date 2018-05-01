@@ -1,0 +1,1 @@
+/media/fedora_work/project/real-time/l4re/src/l4/mybuild/pkg/l4re-core/ldscripts/OBJ-x86_gen/main_dyn.ld

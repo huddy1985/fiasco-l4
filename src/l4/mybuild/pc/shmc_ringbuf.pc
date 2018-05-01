@@ -1,0 +1,6 @@
+Name: shmc_ringbuf
+Version: 0
+Description: L4 library
+
+Libs: -l4shmc_ringbuf
+Requires: shmc  

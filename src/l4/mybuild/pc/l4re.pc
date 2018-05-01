@@ -1,0 +1,7 @@
+Name: l4re
+Version: 0
+Description: L4 library
+
+Libs: -l4re
+Requires: l4util l4sys  
+Link_Libs= %{static:-l4re}

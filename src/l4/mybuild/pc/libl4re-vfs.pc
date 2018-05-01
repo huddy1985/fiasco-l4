@@ -1,0 +1,6 @@
+Name: libl4re-vfs
+Version: 0
+Description: L4 library
+
+Libs: -ll4re-vfs.o
+Requires: libsupc++ l4re-util  

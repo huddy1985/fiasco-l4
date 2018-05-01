@@ -1,0 +1,1 @@
+CXXFLAGS_cxx_atexit.e.cc := -Wall

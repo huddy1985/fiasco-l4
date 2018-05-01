@@ -1,0 +1,6 @@
+Name: libirq
+Version: 0
+Description: L4 library
+
+Libs: -lirq
+Requires: libio libpthread  

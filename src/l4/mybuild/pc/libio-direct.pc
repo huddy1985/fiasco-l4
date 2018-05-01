@@ -1,0 +1,7 @@
+incdir=/empty_incdir
+Name: libio-direct
+Version: 0
+Description: L4 library
+Cflags: -I${incdir}/libio-direct 
+Libs: -lio-direct
+Requires: libsupc++_minimal libsigma0  

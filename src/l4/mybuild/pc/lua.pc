@@ -1,0 +1,7 @@
+incdir=/empty_incdir
+Name: lua
+Version: 0
+Description: L4 library
+Cflags: -I${incdir}/lua 
+Libs: -llua
+Requires:  

@@ -1,0 +1,6 @@
+Name: libc_be_sig_noop
+Version: 0
+Description: L4 library
+
+Libs: -lc_be_sig_noop
+Requires:  

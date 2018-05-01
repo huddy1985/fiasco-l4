@@ -1,0 +1,7 @@
+Name: libc_be_l4re
+Version: 0
+Description: L4 library
+
+Libs: -lc_be_l4re
+Requires: l4re  
+Link_Libs= %{static:-lc_be_l4re -l4re}

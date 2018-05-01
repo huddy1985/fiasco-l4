@@ -1,0 +1,1 @@
+CXXFLAGS_thread.e.cc := -Wall

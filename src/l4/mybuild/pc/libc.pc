@@ -1,0 +1,7 @@
+Name: libc
+Version: 0
+Description: L4 library
+Cflags: bid_allow_stack_protector
+Libs: -luc_c -luc_c_nonshared.p -lssp_nonshared.p
+Requires: ldscripts  
+Link_Libs= %{static:-luc_c}

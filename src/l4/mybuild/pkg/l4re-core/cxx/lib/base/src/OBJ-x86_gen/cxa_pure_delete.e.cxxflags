@@ -1,0 +1,1 @@
+CXXFLAGS_cxa_pure_delete.e.cc := -Wall

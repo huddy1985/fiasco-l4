@@ -1,0 +1,7 @@
+Name: ldso
+Version: 0
+Description: L4 library
+
+Libs: -lld-l4
+Requires:  
+Link_DynLinker= rom/libld-l4.so

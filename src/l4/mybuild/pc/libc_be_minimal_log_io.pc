@@ -1,0 +1,7 @@
+Name: libc_be_minimal_log_io
+Version: 0
+Description: L4 library
+
+Libs: -lc_be_minimal_log_io
+Requires: l4re  
+Link_Libs= %{static:-lc_be_minimal_log_io}

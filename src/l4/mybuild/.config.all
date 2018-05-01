@@ -1,0 +1,56 @@
+#
+# Automatically generated file; DO NOT EDIT.
+# L4Re Configuration
+#
+CONFIG_BID_COLORED_PHASES=y
+CONFIG_DROPS_STDDIR="/path/to/l4re"
+CONFIG_BUILD_ARCH_x86=y
+CONFIG_CTAGS="ctags"
+CONFIG_YACC="yacc"
+CONFIG_BUILD_ARCH="x86"
+CONFIG_ARCH_ENABLE_STACK_PROTECTOR=y
+CONFIG_HAVE_LDSO=y
+CONFIG_CPU="gen"
+CONFIG_BID_GCC_STACK_PROTECTOR=y
+CONFIG_PLATFORM_TYPE="pc"
+CONFIG_DROPS_INSTDIR="/path/to/l4re"
+CONFIG_MAKECONFS_ADD=""
+CONFIG_LEX="flex"
+CONFIG_INT_CPP_NAME_SWITCH=y
+CONFIG_BUILD_ABI_l4f=y
+CONFIG_PLATFORM_TYPE_pc=y
+CONFIG_BUILD_ABI="l4f"
+CONFIG_BID_GCC_ENABLE_STACK_PROTECTOR=y
+CONFIG_INT_LD_NAME_SWITCH=y
+CONFIG_ETAGS="etags"
+BUILD_SYSTEMS=x86_gen x86_gen-l4f
+BID_COMPILER_TYPE=gcc
+GCCDIR=/usr/lib/gcc/x86_64-linux-gnu/5
+GCCLIB_HOST=/usr/lib/gcc/x86_64-linux-gnu/5/32/libgcc.a
+GCCLIB_EH=/usr/lib/gcc/x86_64-linux-gnu/5/32/libgcc_eh.a
+GCCLIB_S_SO=/usr/lib/gcc/x86_64-linux-gnu/5/32/libgcc_s.so
+GCCVERSION=5
+GCCMAJORVERSION=5
+GCCMINORVERSION=4
+GCCPATCHLEVEL=0
+GCC_HAS_ATOMICS=y
+GCCNOSTACKPROTOPT=-fno-stack-protector
+GCCSTACKPROTOPT=-fstack-protector
+GCCSTACKPROTALLOPT=-fstack-protector-all
+LDVERSION=226
+GCCSYSLIBDIRS=-L/usr/lib/gcc/x86_64-linux-gnu/5/32/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/5/32/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../x86_64-linux-gnu/lib/i386-linux-gnu/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../x86_64-linux-gnu/lib/../lib32/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/5/32/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../i386-linux-gnu/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../lib32/ -L/lib/x86_64-linux-gnu/5/32/ -L/lib/i386-linux-gnu/ -L/lib/../lib32/ -L/usr/lib/x86_64-linux-gnu/5/32/ -L/usr/lib/i386-linux-gnu/ -L/usr/lib/../lib32/ -L/usr/lib/gcc/x86_64-linux-gnu/5/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../x86_64-linux-gnu/lib/x86_64-linux-gnu/5/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../x86_64-linux-gnu/lib/i386-linux-gnu/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../../x86_64-linux-gnu/lib/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../x86_64-linux-gnu/5/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../i386-linux-gnu/ -L/usr/lib/gcc/x86_64-linux-gnu/5/../../../ -L/lib/x86_64-linux-gnu/5/ -L/lib/i386-linux-gnu/ -L/lib/ -L/usr/lib/x86_64-linux-gnu/5/ -L/usr/lib/i386-linux-gnu/ -L/usr/lib/
+GCCFORTRANAVAIL=
+GCCINCFIXEDPATH=/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed
+GCCNOFPU_x86=-mno-mmx -mno-3dnow -mno-sse -mno-sse2 -mno-sse3 -mno-sse4 -mno-sse4a
+GCCLIB_FILE_crtbegin.o=/usr/lib/gcc/x86_64-linux-gnu/5/32/crtbegin.o
+GCCLIB_FILE_crtbeginS.o=/usr/lib/gcc/x86_64-linux-gnu/5/32/crtbeginS.o
+GCCLIB_FILE_crtbeginT.o=/usr/lib/gcc/x86_64-linux-gnu/5/32/crtbeginT.o
+GCCLIB_FILE_crtendS.o=/usr/lib/gcc/x86_64-linux-gnu/5/32/crtendS.o
+GCCLIB_FILE_crtend.o=/usr/lib/gcc/x86_64-linux-gnu/5/32/crtend.o
+LD_GENDEP_PREFIX=LD_PRELOAD=libgendep.so LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64:/media/fedora_work/project/real-time/l4re/src/l4/mybuild/tool/gendep/64:/media/fedora_work/project/real-time/l4re/src/l4/mybuild/tool/gendep/32:/media/fedora_work/project/real-time/l4re/src/l4/mybuild/tool/gendep
+HOST_SYSTEM=linux
+LD_HAS_HASH_STYLE_OPTION=n
+INT_CPP_NAME=cc1
+INT_CXX_NAME=cc1plus
+INT_LD_NAME=ld
+LD_EMULATION=elf_i386

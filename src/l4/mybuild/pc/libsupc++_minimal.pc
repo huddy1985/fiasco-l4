@@ -1,0 +1,8 @@
+incdir=/empty_incdir
+Name: libsupc++_minimal
+Version: 0
+Description: L4 library
+Cflags: -I${incdir}/libstdc++-v3 
+Libs: -lsupc++_minimal
+Requires: libc_minimal   
+Link_Libs= %{static:-lsupc++_minimal}

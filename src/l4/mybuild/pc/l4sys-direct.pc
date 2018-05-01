@@ -1,0 +1,7 @@
+Name: l4sys-direct
+Version: 0
+Description: L4 library
+
+Libs: -ll4sys-direct
+Requires:  
+Link_Libs= %{static:-ll4sys-direct}

@@ -1,0 +1,6 @@
+Name: libdrivers_hpet
+Version: 0
+Description: L4 library
+
+Libs: -ldrivers_hpet
+Requires:  

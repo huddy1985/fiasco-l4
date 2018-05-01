@@ -1,0 +1,6 @@
+Name: libvcpu
+Version: 0
+Description: L4 library
+
+Libs: -lvcpu
+Requires: l4re-util  

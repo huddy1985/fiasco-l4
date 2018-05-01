@@ -1,0 +1,7 @@
+Name: libc_support_misc
+Version: 0
+Description: L4 library
+
+Libs: -lc_support_misc
+Requires:  
+Link_Libs= %{static:-lc_support_misc}

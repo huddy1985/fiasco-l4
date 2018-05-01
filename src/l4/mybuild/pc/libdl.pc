@@ -1,0 +1,6 @@
+Name: libdl
+Version: 0
+Description: L4 library
+
+Libs: -ldl
+Requires:  

@@ -1,0 +1,7 @@
+Name: l4util
+Version: 0
+Description: L4 library
+
+Libs: -ll4util
+Requires: l4sys  
+Link_Libs= %{static:-ll4util}

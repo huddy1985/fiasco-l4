@@ -1,0 +1,6 @@
+Name: input-dummy
+Version: 0
+Description: L4 library
+
+Libs: -linput-dummy
+Requires:  

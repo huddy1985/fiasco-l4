@@ -1,0 +1,1959 @@
+
+
+mainmenu "Fiasco configuration"
+
+config KERNELVERSION
+	string
+	option env="KERNELVERSION"
+
+config INCLUDE_PPC32
+	bool
+	option env="INCLUDE_PPC32"
+	help
+	  Use "INCLUDE_PPC32=y make config" to include ppc32 options.
+
+config INCLUDE_SPARC
+	bool
+	option env="INCLUDE_SPARC"
+	help
+	  Use "INCLUDE_SPARC=y make config" to include sparc options.
+
+# generic options that might be selected by platforms etc.
+config HAS_FPU_OPTION
+	bool
+
+config HAS_VIRT_OBJ_SPACE_OPTION
+	bool
+
+config HAS_SERIAL_OPTION
+	bool
+
+config HAS_WATCHDOG_OPTION
+	bool
+
+config HAS_JDB_DISASM_OPTION
+	bool
+
+config HAS_JDB_GZIP_OPTION
+	bool
+
+config HAS_IOMMU_OPTION
+	bool
+
+config HAS_MP_OPTION
+	bool
+
+config HAS_CPU_VIRT
+	bool
+
+menu "Target configuration"
+
+choice
+	prompt "Architecture"
+	default IA32
+
+config IA32
+	bool "Intel IA-32 processor family"
+	select BIT32
+	select HAS_VIRT_OBJ_SPACE_OPTION
+	select HAS_JDB_DISASM_OPTION
+	select HAS_JDB_GZIP_OPTION
+
+config AMD64
+	bool "AMD64 processor family"
+	select HAS_VIRT_OBJ_SPACE_OPTION
+	select HAS_JDB_DISASM_OPTION
+	select HAS_JDB_GZIP_OPTION
+	select BIT64
+
+#  ARCH_CHOICE
+config ARM
+	bool "ARM processor family"
+	select BIT32 if !BIT64
+	select HAS_FPU_OPTION
+	select FPU if CPU_VIRT
+	select ARM_LPAE if CPU_VIRT || BIT64
+	select HAS_SERIAL_OPTION
+	select HAS_JDB_GZIP_OPTION
+	select HAS_VIRT_OBJ_SPACE_OPTION if ARM_V6PLUS && !CPU_VIRT && !ARM_1176_CACHE_ALIAS_FIX
+
+config MIPS
+	bool "MIPS processor family"
+	select HAS_FPU_OPTION
+	select HAS_SERIAL_OPTION
+	select HAS_CPU_VIRT
+
+config PPC32
+	bool "PowerPC 32 processor family (Caution: INCOMPLETE!)"
+	depends on EXPERIMENTAL && INCLUDE_PPC32
+	select CONTEXT_4K
+	select BIG_ENDIAN
+	select HAS_SERIAL_OPTION
+	select BIT32
+	help
+		PPC32 testing version, mainly for MPC5200 (603e). Currently,
+		there is no support whatsoever.
+
+config SPARC
+	bool "SPARC v8 processor family (Caution: EXPERIMENTAL)"
+	depends on EXPERIMENTAL && INCLUDE_SPARC
+	select BIT32
+	select CONTEXT_4K
+	select HAS_SERIAL_OPTION
+	help
+		SPARC v8 is supposed to run on the LEON3 platform.
+		It is unsupported at the moment.
+
+endchoice
+
+config BIG_ENDIAN
+	bool
+
+choice
+	prompt "Platform"
+	default PF_PC         if IA32
+	default PF_PC         if AMD64
+# ARCH_DEFAULT_PF
+	default PF_INTEGRATOR  if ARM
+	default PF_MALTA  if MIPS
+	default PF_MP52CXX  if PPC32
+	default PF_LEON3  if SPARC
+
+config PF_PC
+	bool "PC platform"
+	depends on IA32 || AMD64
+	select HAS_SERIAL_OPTION
+	select HAS_WATCHDOG_OPTION
+	select HAS_IOMMU_OPTION
+	select HAS_MP_OPTION
+	select HAS_CPU_VIRT
+
+config PF_UX
+	bool "Linux Usermode Platform"
+	depends on IA32
+	select JDB
+
+# PF_CHOICE
+config PF_INTEGRATOR
+	bool "ARM Integrator Platform"
+	depends on ARM
+	select CAN_ARM_CPU_926
+	select CAN_ARM_CPU_1176
+
+config PF_REALVIEW
+	bool "ARM RealView Platform"
+	depends on ARM
+
+config PF_SUNXI
+	bool "Allwinner (sunxi)"
+	depends on ARM
+	select CAN_ARM_CPU_CORTEX_A7
+
+config PF_BCM283X
+	bool "Broadcom 2835, 2836 & 2837"
+	depends on ARM
+
+config PF_MPC52XX
+	bool "Freescale MPC52xx (POWER2/G2/603e) platform"
+	depends on PPC32
+
+config PF_CI20
+	bool "Ingenic CI20 (Creator)"
+	depends on MIPS
+	select SYS_HAS_CPU_MIPS32_R2
+	select HAS_MP_OPTION
+
+config PF_SA1100
+	bool "Intel StrongARM"
+	depends on ARM
+	select CAN_ARM_CPU_SA1100
+
+config PF_XSCALE
+	bool "Intel XScale Platform"
+	depends on ARM
+	select CAN_ARM_CPU_XSCALE
+
+config PF_LEON3
+	bool "LEON3 platform (testing)"
+	depends on SPARC
+
+config PF_BAIKAL_T
+	bool "MIPS Baikal-T platform"
+	depends on MIPS
+	select SYS_HAS_CPU_MIPS32_R2
+	select HAS_MP_OPTION
+	select HAS_LIGHTWEIGHT_BARRIERS_OPTION
+	select DEFAULT_LIGHTWEIGHT_BARRIERS
+
+config PF_Boston
+	bool "MIPS Boston"
+	depends on MIPS
+	select SYS_HAS_CPU_MIPS64_R6
+	select HAS_MP_OPTION
+	select HAS_LIGHTWEIGHT_BARRIERS_OPTION
+	select DEFAULT_LIGHTWEIGHT_BARRIERS
+
+config PF_CI40
+	bool "MIPS Creator Ci40"
+	depends on MIPS
+	select SYS_HAS_CPU_MIPS32_R2
+	select HAS_MP_OPTION
+	select HAS_LIGHTWEIGHT_BARRIERS_OPTION
+	select DEFAULT_LIGHTWEIGHT_BARRIERS
+
+config PF_MALTA
+	bool "MIPS Malta platform"
+	depends on MIPS
+	select SYS_HAS_CPU_MIPS64_R2
+	select SYS_HAS_CPU_MIPS64_R6
+	select HAS_WEAK_ORDERING_OPTION
+	select HAS_LIGHTWEIGHT_BARRIERS_OPTION
+
+config PF_SEAD3
+	bool "MIPS SEAD3 platform"
+	depends on MIPS
+	select SYS_HAS_CPU_MIPS32_R2
+	select HAS_WEAK_ORDERING_OPTION
+	select HAS_LIGHTWEIGHT_BARRIERS_OPTION
+
+config PF_ARMADA38X
+	bool "Marvell Armada 38x"
+	depends on ARM
+	select CAN_ARM_CPU_CORTEX_A9
+	select CAN_ARM_CACHE_L2CXX0
+
+config PF_KIRKWOOD
+	bool "Marvell Kirkwood platform"
+	depends on ARM
+	select CAN_ARM_CPU_926
+
+config PF_TEGRA
+	bool "NVIDIA Tegra platform"
+	depends on ARM
+	select CAN_ARM_CPU_CORTEX_A9
+	select CAN_ARM_CACHE_L2CXX0
+
+config PF_LAYERSCAPE
+	bool "NXP/Freescale Layerscape"
+	depends on ARM
+	select HAS_CPU_VIRT
+	select HAS_ARM_PSCI
+
+config PF_IMX
+	bool "NXP/Freescale i.MX"
+	depends on ARM
+	select HAS_ARM_PSCI
+
+config PF_QEMU
+	bool "Qemu platform (testing)"
+	depends on PPC32
+
+config PF_RCAR3
+	bool "Renesas R-Car Gen3"
+	depends on ARM
+	select CAN_ARM_CPU_CORTEX_A57
+	select CAN_ARM_CPU_CORTEX_A53
+	select HAS_ARM_PSCI
+	select ARM_PSCI
+
+config PF_EXYNOS
+	bool "Samsung Exynos"
+	depends on ARM
+	select HAVE_ARM_SECMONIF_NONE
+	select HAVE_ARM_SECMONIF_MC
+
+config PF_S3C2410
+	bool "Samsung S3C2410 Platform"
+	depends on ARM
+	select CAN_ARM_CPU_920T
+
+config PF_OMAP
+	bool "TI OMAP"
+	depends on ARM
+
+config PF_ZYNQ
+	bool "Xilinx Zynq"
+	depends on ARM
+	select CAN_ARM_CPU_CORTEX_A9
+	select CAN_ARM_CACHE_L2CXX0
+
+config PF_ZYNQMP
+	bool "Xilinx Zynq UltraSCALE+ MPSoC"
+	depends on ARM
+	select CAN_ARM_CPU_CORTEX_A53
+	select HAS_ARM_PSCI
+	select ARM_PSCI
+
+
+endchoice
+
+# PF_INCLUDE
+config BSP_NAME
+	string
+	default "armada38x" if PF_ARMADA38X
+	default "baikal" if PF_BAIKAL_T
+	default "bcm283x" if PF_BCM283X
+	default "boston" if PF_Boston
+	default "ci20" if PF_CI20
+	default "ci40" if PF_CI40
+	default "exynos" if PF_EXYNOS
+	default "imx" if PF_IMX
+	default "integrator" if PF_INTEGRATOR
+	default "kirkwood" if PF_KIRKWOOD
+	default "layerscape" if PF_LAYERSCAPE
+	default "leon3" if PF_LEON3
+	default "malta" if PF_MALTA
+	default "mpc52xx" if PF_MPC52XX
+	default "omap" if PF_OMAP
+	default "qemu" if PF_QEMU
+	default "rcar3" if PF_RCAR3
+	default "realview" if PF_REALVIEW
+	default "s3c" if PF_S3C2410
+	default "sa1100" if PF_SA1100
+	default "sead3" if PF_SEAD3
+	default "sunxi" if PF_SUNXI
+	default "tegra" if PF_TEGRA
+	default "pxa" if PF_XSCALE
+	default "zynq" if PF_ZYNQ
+	default "zynqmp" if PF_ZYNQMP
+# PF_SECTION: GLOBAL
+if ARM
+	# SECTION: GLOBAL
+	
+	config HAS_64BIT
+		bool
+	
+	config CAN_ARM_CPU_SA1100
+		bool
+	
+	config CAN_ARM_CPU_XSCALE
+		bool
+	
+	config CAN_ARM_CPU_920T
+		bool
+	
+	config CAN_ARM_CPU_926
+		bool
+	
+	config CAN_ARM_CPU_1136
+		bool
+	
+	config CAN_ARM_CPU_1176
+		bool
+	
+	config CAN_ARM_CPU_MPCORE
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A5
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A7
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A8
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A9
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A15
+		bool
+	
+	config CAN_ARM_CACHE_L2CXX0
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A53
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A57
+		bool
+	
+	config CAN_ARM_CPU_CORTEX_A72
+		bool
+	
+	config DEFAULT_ARM_EM_TZ
+	        bool
+	
+	config DEFAULT_ARM_EM_NS
+	        bool
+	
+	config ARM_V6
+		def_bool y if ARM_1136 || ARM_1176 || ARM_MPCORE
+	
+	config ARM_V7
+		def_bool y if ARM_CORTEX_A8 || ARM_CORTEX_A9 \
+		              || ARM_CORTEX_A5 || ARM_CORTEX_A7 || ARM_CORTEX_A15
+	
+	config ARM_V6PLUS
+		def_bool y if ARM_V6 || ARM_V7 || ARM_V8
+	
+	config ARM_V7PLUS
+		def_bool y if ARM_V7 || ARM_V8
+	
+	config ARM_V8
+		bool
+	
+endif
+if PF_ARMADA38X
+	# PF: ARMADA38X
+	# PFDESCR: Marvell Armada 38x
+	# PFSELECT: CAN_ARM_CPU_CORTEX_A9 CAN_ARM_CACHE_L2CXX0
+	# PFDEPENDS: ARM
+endif
+if PF_BCM283X
+	# PF: BCM283X
+	# PFDESCR: Broadcom 2835, 2836 & 2837
+	# PFDEPENDS: ARM
+	
+	choice
+	        prompt "Raspberry Pi variant"
+	        default PF_BCM283X_RPI3
+	
+	config PF_BCM283X_RPI1
+	        bool "rpi1"
+	        depends on PF_BCM283X
+	        select CAN_ARM_CPU_1176
+	
+	config PF_BCM283X_RPI2
+	        bool "rpi2"
+	        depends on PF_BCM283X
+	        select CAN_ARM_CPU_CORTEX_A7
+	
+	config PF_BCM283X_RPI3
+	        bool "rpi3"
+	        depends on PF_BCM283X
+	        select CAN_ARM_CPU_CORTEX_A53
+	
+	endchoice
+endif
+if PF_EXYNOS
+	# PF: EXYNOS
+	# PFDESCR: Samsung Exynos
+	# PFDEPENDS: ARM
+	# PFSELECT: HAVE_ARM_SECMONIF_NONE HAVE_ARM_SECMONIF_MC
+	
+	config PF_EXYNOS4
+	        bool
+	        depends on PF_EXYNOS
+	        select CAN_ARM_CPU_CORTEX_A9
+	        select CAN_ARM_CACHE_L2CXX0
+	
+	config PF_EXYNOS5
+	        bool
+	        depends on PF_EXYNOS
+	        select CAN_ARM_CPU_CORTEX_A15
+	        select HAS_CPU_VIRT
+	        select DEFAULT_ARM_EM_NS  if CPU_VIRT
+	
+	config CPU_SUSPEND
+	        bool
+	        default y if PF_EXYNOS && (PF_EXYNOS_EXTGIC || PF_EXYNOS5)
+	        depends on PF_EXYNOS && (PF_EXYNOS_EXTGIC || PF_EXYNOS5)
+	
+	config PF_EXYNOS_PKG_IDS
+	        string "Exynos package ID file"
+	        default ""
+	        help
+	          Optional file for board IDs, to select proper UART at runtime.
+	          It is safe to leave this empty and select the UART in this
+	          configuration.
+	
+	choice
+	        prompt "Exynos Platform"
+	        default PF_EXYNOS_4210
+	        help
+	          Select the Exynos Soc type, if the optional package-ID
+	          file is used (PF_EXYNOS_PKG_IDS) this file overrides the
+	          Soc type for a matching platform.
+	
+	config PF_EXYNOS4_4210
+	        bool "4210 - Exynos 4"
+	        depends on PF_EXYNOS
+	        select PF_EXYNOS4
+	        help
+	          Choose for Exynos4 based platforms.
+	
+	config PF_EXYNOS4_4412
+	        bool "4412 - Exynos 4"
+	        depends on PF_EXYNOS
+	        select PF_EXYNOS4
+	        help
+	          Choose for Exynos4 based platforms.
+	
+	config PF_EXYNOS5_5250
+	        bool "5250 - Exynos 5"
+	        depends on PF_EXYNOS
+	        select PF_EXYNOS5
+	        help
+	          Choose for Exynos5 based platforms.
+	
+	config PF_EXYNOS5_5410
+	        bool "5410 - Exynos 5"
+	        depends on PF_EXYNOS
+	        select PF_EXYNOS5
+	        help
+	          Choose for Exynos5 based platforms.
+	
+	endchoice
+	
+	
+	config PF_EXYNOS_UART_NATIVE
+		def_bool y
+	
+	config PF_EXYNOS_UART_NR
+	        int "Which UART to use for kernel output"
+	        range 0 3
+	        default 2
+	        depends on PF_EXYNOS_UART_NATIVE
+	        help
+	          Select which UART to use for kernel I/O. If the optional
+	          package-ID file is used (PF_EXYNOS_PKG_IDS) this file
+	          overrides the UART number for a matching platform.
+	          Odroid-A and Odroid-X use UART 1, the Exynos Snow platform uses
+	          UART 3, most others use UART 2.
+	
+	choice
+		prompt "Platform Timer"
+		default PF_EXYNOS_TIMER_MCT
+	
+	config PF_EXYNOS_TIMER_MCT
+		bool "Multi-core timer"
+		depends on !CPU_VIRT
+	
+	config PF_EXYNOS_TIMER_MP
+		bool "MP timer"
+		depends on ARM_CORTEX_A9
+	
+	config PF_EXYNOS_TIMER_PWM
+		bool "PWM timer"
+		depends on !CPU_VIRT
+	
+	config PF_EXYNOS_TIMER_GEN
+	        bool "ARM Generic Timer"
+	        depends on ARM_CORTEX_A15
+	
+	endchoice
+	
+	config PF_EXYNOS_EXTGIC
+	        bool "Use ExtGic"
+		depends on PF_EXYNOS_TIMER_MCT
+	        depends on PF_EXYNOS4
+	        default y
+	        help
+	          Use internal or external GIC.
+	
+endif
+if PF_IMX
+	# PF: IMX
+	# PFDESCR: NXP/Freescale i.MX
+	# PFDEPENDS: ARM
+	# PFSELECT: HAS_ARM_PSCI
+	
+	choice
+		prompt "NXP/Freescale i.MX"
+		default PF_IMX_51
+	
+	config PF_IMX_21
+		bool "i.MX21"
+		depends on PF_IMX
+		select CAN_ARM_CPU_926
+		help
+		  Choose for i.MX21.
+	
+	config PF_IMX_28
+		bool "i.MX28"
+		depends on PF_IMX
+		select CAN_ARM_CPU_926
+		help
+		  Choose for i.MX28.
+	
+	config PF_IMX_35
+		bool "i.MX35"
+		depends on PF_IMX
+		select CAN_ARM_CPU_1136
+	        help
+	          Choose for i.MX35 platform.
+	
+	config PF_IMX_51
+		bool "i.MX51"
+		depends on PF_IMX
+		select CAN_ARM_CPU_CORTEX_A8
+		help
+		  Choose for i.MX51.
+	
+	# remove comment when actually tested...
+	#config PF_IMX_53
+	#	bool "i.MX53"
+	#	depends on PF_IMX
+	#	select CAN_ARM_CPU_CORTEX_A8
+	#	help
+	#	  Choose for i.MX53.
+	
+	config PF_IMX_6
+	        bool "i.MX6"
+	        depends on PF_IMX
+	        select CAN_ARM_CPU_CORTEX_A9
+		select CAN_ARM_CACHE_L2CXX0
+	        help
+	          Choose for i.MX6 platform.
+	
+	config PF_IMX_6UL
+	        bool "i.MX6UL"
+	        depends on PF_IMX
+	        select CAN_ARM_CPU_CORTEX_A7
+	        select HAS_CPU_VIRT
+	        help
+	          Choose for i.MX6UL platform.
+	
+	config PF_IMX_7
+	        bool "i.MX7"
+	        depends on PF_IMX
+	        select CAN_ARM_CPU_CORTEX_A7
+	        select HAS_CPU_VIRT
+	        help
+	          Choose for i.MX7 platform.
+	
+	endchoice
+	
+	config PF_IMX_RAM_PHYS_BASE
+		hex
+		default 0xc0000000 if PF_IMX_21
+		default 0x40000000 if PF_IMX_28
+		default 0x80000000 if PF_IMX_35 || PF_IMX_6UL || PF_IMX_7
+		default 0x90000000 if PF_IMX_51
+	        default 0x10000000 if PF_IMX_6
+	
+	choice
+		prompt "Choose timer for i.MX6"
+		depends on ARM_CORTEX_A9
+		default PF_IMX_6_TIMER_MPTIMER
+	
+	config PF_IMX_6_TIMER_MPTIMER
+	        bool "Use CPU-local MP-timer"
+	
+	config PF_IMX_6_TIMER_EPIT
+	        bool "Use EPIT timer"
+	
+	endchoice
+endif
+if PF_INTEGRATOR
+	# PF: INTEGRATOR
+	# PFDESCR: ARM Integrator Platform
+	# PFSELECT: CAN_ARM_CPU_926 CAN_ARM_CPU_1176
+	# PFDEPENDS: ARM
+endif
+if PF_KIRKWOOD
+	# PF: KIRKWOOD
+	# PFDESCR: Marvell Kirkwood platform
+	# PFSELECT: CAN_ARM_CPU_926
+	# PFDEPENDS: ARM
+endif
+if PF_LAYERSCAPE
+	# PF: LAYERSCAPE
+	# PFDESCR: NXP/Freescale Layerscape
+	# PFSELECT: HAS_CPU_VIRT HAS_ARM_PSCI
+	# PFDEPENDS: ARM
+	
+	choice
+		prompt "Layerscape variant"
+		default PF_LS1021A
+	
+	config PF_LS1021A
+		bool "LS1021A"
+		select CAN_ARM_CPU_CORTEX_A7
+	
+	config PF_LS1012A
+		bool "LS1012A"
+		select CAN_ARM_CPU_CORTEX_A53
+	
+	endchoice
+endif
+if PF_OMAP
+	# PF: OMAP
+	# PFDESCR: TI OMAP
+	# PFDEPENDS: ARM
+	
+	choice
+		prompt "OMAP Platform"
+		depends on PF_OMAP
+		default PF_OMAP4_PANDABOARD
+	
+	config PF_OMAP3_OMAP35XEVM
+		bool "TI OMAP35xEVM"
+		select CAN_ARM_CPU_CORTEX_A8
+		help
+		  Choose for OMAP35xEVM platform.
+	
+	config PF_OMAP3_BEAGLEBOARD
+		bool "Beagle Board"
+		select CAN_ARM_CPU_CORTEX_A8
+		help
+		  Choose for Beagleboard.
+	
+	config PF_OMAP3_AM33XX
+		bool "TI AM33xx"
+		select CAN_ARM_CPU_CORTEX_A8
+		help
+		  Choose for AM33xx platforms (e.g. Beaglebone).
+	
+	config PF_OMAP4_PANDABOARD
+		bool "Pandaboard"
+		depends on PF_OMAP
+		select CAN_ARM_CPU_CORTEX_A9
+		select CAN_ARM_CACHE_L2CXX0
+		help
+		  Choose for Pandaboard.
+	
+	config PF_OMAP5_5432EVM
+	        bool "OMAP5432EVM"
+		select CAN_ARM_CPU_CORTEX_A15
+		select HAS_CPU_VIRT
+		select DEFAULT_ARM_EM_NS if CPU_VIRT
+	        help
+	          Choose for OMAP5432EVM.
+	
+	endchoice
+endif
+if PF_XSCALE
+	# PF: XSCALE
+	# PFDESCR: Intel XScale Platform
+	# PFSELECT: CAN_ARM_CPU_XSCALE
+	# PFDEPENDS: ARM
+endif
+if PF_RCAR3
+	# PF: RCAR3
+	# PFDESCR: Renesas R-Car Gen3
+	# PFSELECT: CAN_ARM_CPU_CORTEX_A57 CAN_ARM_CPU_CORTEX_A53 HAS_ARM_PSCI
+	# PFSELECT: ARM_PSCI
+	# PFDEPENDS: ARM
+endif
+if PF_REALVIEW
+	# PF: REALVIEW
+	# PFDESCR: ARM RealView Platform
+	# PFDEPENDS: ARM
+	
+	choice
+		prompt "Realview Platform"
+		default PF_REALVIEW_EB
+	
+	config PF_REALVIEW_EB
+		bool "Emulation Baseboard (EB)"
+		depends on PF_REALVIEW
+		select CAN_ARM_CPU_926
+		select CAN_ARM_CPU_1176
+		select CAN_ARM_CPU_MPCORE
+		select CAN_ARM_CPU_CORTEX_A8
+		select CAN_ARM_CPU_CORTEX_A9
+		select CAN_ARM_CACHE_L2CXX0 if ARM_MPCORE
+		help
+		  Choose for Emulation Baseboard (EB)
+	
+	config PF_REALVIEW_PB11MP
+		bool "PB11MP"
+		depends on PF_REALVIEW
+		select CAN_ARM_CPU_MPCORE
+		select CAN_ARM_CACHE_L2CXX0
+		help
+		  Choose for PB11MP
+	
+	config PF_REALVIEW_PBX
+		bool "PBX"
+		depends on PF_REALVIEW
+		select CAN_ARM_CPU_CORTEX_A9
+		select CAN_ARM_CACHE_L2CXX0
+		help
+		  Choose for PBX-A9.
+	
+	config PF_REALVIEW_VEXPRESS
+		bool "Versatile Express"
+		depends on PF_REALVIEW
+		select CAN_ARM_CPU_CORTEX_A9
+		select CAN_ARM_CPU_CORTEX_A15
+		select CAN_ARM_CPU_CORTEX_A53
+		select CAN_ARM_CPU_CORTEX_A57
+		help
+		  Choose for Versatile Express.
+	
+	endchoice
+	
+	config PF_REALVIEW_VEXPRESS_A9
+		def_bool y
+		depends on PF_REALVIEW_VEXPRESS && ARM_CORTEX_A9
+	
+	config PF_REALVIEW_VEXPRESS_A15
+		def_bool y
+		depends on PF_REALVIEW_VEXPRESS && ARM_CORTEX_A15
+	
+	config PF_REALVIEW_VEXPRESS_A53
+		def_bool y
+		depends on PF_REALVIEW_VEXPRESS && ARM_CORTEX_A53
+	
+	config PF_REALVIEW_VEXPRESS_A57
+		def_bool y
+		depends on PF_REALVIEW_VEXPRESS && ARM_CORTEX_A57
+	
+	choice
+		prompt "Start of RAM (physical address)" if !PF_REALVIEW_EB
+		default PF_REALVIEW_RAM_PHYS_BASE_0x6 if PF_REALVIEW_VEXPRESS_A9
+		default PF_REALVIEW_RAM_PHYS_BASE_0x0
+	
+	config PF_REALVIEW_RAM_PHYS_BASE_0x0
+		bool "0x00000000"
+		depends on !ARM_CORTEX_A15
+	
+	config PF_REALVIEW_RAM_PHYS_BASE_0x2
+		bool "0x20000000"
+		depends on PF_REALVIEW_PBX
+	
+	config PF_REALVIEW_RAM_PHYS_BASE_0x6
+		bool "0x60000000"
+		depends on PF_REALVIEW_VEXPRESS_A9
+	
+	config PF_REALVIEW_RAM_PHYS_BASE_0x7
+		bool "0x70000000"
+		depends on PF_REALVIEW_PBX || PF_REALVIEW_PB11MP
+	
+	config PF_REALVIEW_RAM_PHYS_BASE_0x8
+		bool "0x80000000"
+		depends on PF_REALVIEW_VEXPRESS_A15 || PF_REALVIEW_VEXPRESS_A53 || PF_REALVIEW_VEXPRESS_A57
+	
+	endchoice
+	
+	config PF_REALVIEW_RAM_PHYS_BASE
+		hex
+		default 0x0        if !PF_REALVIEW_RAM_PHYS_BASE_0x2 && !PF_REALVIEW_RAM_PHYS_BASE_0x6 && !PF_REALVIEW_RAM_PHYS_BASE_0x7 && !PF_REALVIEW_RAM_PHYS_BASE_0x8
+		default 0x20000000 if PF_REALVIEW_RAM_PHYS_BASE_0x2
+		default 0x60000000 if PF_REALVIEW_RAM_PHYS_BASE_0x6
+		default 0x70000000 if PF_REALVIEW_RAM_PHYS_BASE_0x7
+		default 0x80000000 if PF_REALVIEW_RAM_PHYS_BASE_0x8
+endif
+if PF_S3C2410
+	# PF: S3C2410
+	# PFDESCR: Samsung S3C2410 Platform
+	# PFDEPENDS: ARM
+	# PFSELECT: CAN_ARM_CPU_920T
+endif
+if PF_SA1100
+	# PF: SA1100
+	# PFDESCR: Intel StrongARM
+	# PFSELECT: CAN_ARM_CPU_SA1100
+	# PFDEPENDS: ARM
+endif
+if PF_SUNXI
+	# PF: SUNXI
+	# PFDESCR: Allwinner (sunxi)
+	# PFSELECT: CAN_ARM_CPU_CORTEX_A7
+	# PFDEPENDS: ARM
+endif
+if PF_TEGRA
+	# PF: TEGRA
+	# PFDESCR: NVIDIA Tegra platform
+	# PFSELECT: CAN_ARM_CPU_CORTEX_A9 CAN_ARM_CACHE_L2CXX0
+	# PFDEPENDS: ARM
+	
+	choice
+		prompt "Tegra Platform"
+		default PF_TEGRA2
+	
+	config PF_TEGRA2
+		bool "Tegra2"
+		depends on PF_TEGRA
+	
+	config PF_TEGRA3
+		bool "Tegra3"
+		depends on PF_TEGRA
+	
+	endchoice
+	
+	choice
+		prompt "Platform Timer"
+		default PF_TEGRA_TIMER_MP
+	
+	config PF_TEGRA_TIMER_MP
+		bool "MP timer"
+		help
+		  ARM local-core multi-processor timer.
+	
+	config PF_TEGRA_TIMER_TMR
+		bool "TMR timer"
+		help
+		  Single broadcasting timer.
+	
+	endchoice
+endif
+if PF_ZYNQ
+	# PF: ZYNQ
+	# PFDESCR: Xilinx Zynq
+	# PFSELECT: CAN_ARM_CPU_CORTEX_A9 CAN_ARM_CACHE_L2CXX0
+	# PFDEPENDS: ARM
+endif
+if PF_ZYNQMP
+	# PF: ZYNQMP
+	# PFDESCR: Xilinx Zynq UltraSCALE+ MPSoC
+	# PFSELECT: CAN_ARM_CPU_CORTEX_A53 HAS_ARM_PSCI
+	# PFSELECT: ARM_PSCI
+	# PFDEPENDS: ARM
+endif
+if MIPS
+	# SECTION: GLOBAL
+	
+	config SYS_HAS_CPU_MIPS32_R2
+		bool
+	
+	config SYS_HAS_CPU_MIPS32_R6
+		bool
+	
+	config SYS_HAS_CPU_MIPS64_R2
+		bool
+	
+	config SYS_HAS_CPU_MIPS64_R6
+		bool
+	
+	config HAS_WEAK_ORDERING_OPTION
+		bool
+	
+	config HAS_LIGHTWEIGHT_BARRIERS_OPTION
+		bool
+	
+	config CPU_MIPS32
+		bool
+	
+	config CPU_MIPS64
+		bool
+	
+	config CPU_MIPSR2
+		bool
+	
+	config CPU_MIPSR6
+		bool
+	
+	config CAN_MIPS_VZ_ASE
+		bool
+	
+endif
+if PF_BAIKAL_T
+	# PF: BAIKAL_T
+	# PFDESCR: MIPS Baikal-T platform
+	# PFDEPENDS: MIPS
+	# PFSELECT: SYS_HAS_CPU_MIPS32_R2
+	# PFSELECT: HAS_MP_OPTION
+	# PFSELECT: HAS_LIGHTWEIGHT_BARRIERS_OPTION
+	# PFSELECT: DEFAULT_LIGHTWEIGHT_BARRIERS
+endif
+if PF_Boston
+	# PF: Boston
+	# PFDESCR: MIPS Boston
+	# PFDEPENDS: MIPS
+	# PFSELECT: SYS_HAS_CPU_MIPS64_R6
+	# PFSELECT: HAS_MP_OPTION
+	# PFSELECT: HAS_LIGHTWEIGHT_BARRIERS_OPTION
+	# PFSELECT: DEFAULT_LIGHTWEIGHT_BARRIERS
+endif
+if PF_CI20
+	# PF: CI20
+	# PFDESCR: Ingenic CI20 (Creator)
+	# PFDEPENDS: MIPS
+	# PFSELECT: SYS_HAS_CPU_MIPS32_R2
+	# PFSELECT: HAS_MP_OPTION
+	
+endif
+if PF_CI40
+	# PF: CI40
+	# PFDESCR: MIPS Creator Ci40
+	# PFDEPENDS: MIPS
+	# PFSELECT: SYS_HAS_CPU_MIPS32_R2
+	# PFSELECT: HAS_MP_OPTION
+	# PFSELECT: HAS_LIGHTWEIGHT_BARRIERS_OPTION
+	# PFSELECT: DEFAULT_LIGHTWEIGHT_BARRIERS
+endif
+if PF_MALTA
+	# PF: MALTA
+	# PFDESCR: MIPS Malta platform
+	# PFDEPENDS: MIPS
+	# PFSELECT: SYS_HAS_CPU_MIPS64_R2
+	# PFSELECT: SYS_HAS_CPU_MIPS64_R6
+	# PFSELECT: HAS_WEAK_ORDERING_OPTION
+	# PFSELECT: HAS_LIGHTWEIGHT_BARRIERS_OPTION
+	
+	choice
+		prompt "Malta Platform"
+		default PF_MALTA_UP
+	
+	config PF_MALTA_UP
+		bool "Single CPU Platform"
+		depends on PF_MALTA
+		select CAN_MIPS_VZ_ASE
+	
+	config PF_MALTA_MP
+		bool "Multicore CPU Platform"
+		depends on PF_MALTA
+		select HAS_MP_OPTION
+		select CAN_MIPS_VZ_ASE
+	        help
+	          Use CONFIG_MP_MAX_CPUS to set the maximum supported number of CPUs
+	
+	endchoice
+	
+endif
+if PF_SEAD3
+	# PF: SEAD3
+	# PFDESCR: MIPS SEAD3 platform
+	# PFDEPENDS: MIPS
+	# PFSELECT: SYS_HAS_CPU_MIPS32_R2
+	# PFSELECT: HAS_WEAK_ORDERING_OPTION
+	# PFSELECT: HAS_LIGHTWEIGHT_BARRIERS_OPTION
+endif
+if PPC32
+endif
+if PF_MPC52XX
+	# PF: MPC52XX
+	# PFDESCR: Freescale MPC52xx (POWER2/G2/603e) platform
+	# PFDEPENDS: PPC32
+endif
+if PF_QEMU
+	# PF: QEMU
+	# PFDESCR: Qemu platform (testing)
+	# PFDEPENDS: PPC32
+endif
+if SPARC
+endif
+if PF_LEON3
+	# PF: LEON3
+	# PFDESCR: LEON3 platform (testing)
+	# PFDEPENDS: SPARC
+endif
+
+config ABI_VF
+	def_bool y
+
+# PF_SECTION: CPU
+if ARM
+	# SECTION: CPU
+	
+	choice
+		prompt "CPU"
+		default ARM_926    if ARM
+	
+	config ARM_PXA
+		bool "Intel XScale"
+		depends on PF_XSCALE
+	
+	config ARM_SA
+		bool "Intel StrongARM"
+		depends on PF_SA1100
+	
+	config ARM_920T
+		bool "ARM 920T Processor"
+		depends on PF_S3C2410
+	
+	config ARM_926
+		bool "ARM 926 Processor"
+		depends on CAN_ARM_CPU_926
+	
+	config ARM_1136
+		bool "ARM 1136 CPU"
+		depends on CAN_ARM_CPU_1136
+	
+	config ARM_1176
+		bool "ARM 1176 CPU"
+		depends on CAN_ARM_CPU_1176
+	
+	config ARM_MPCORE
+		bool "ARM MPCore CPU"
+		depends on CAN_ARM_CPU_MPCORE
+		select HAS_MP_OPTION
+	
+	config ARM_CORTEX_A5
+		bool "ARM Cortex-A5 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A5
+	
+	config ARM_CORTEX_A7
+		bool "ARM Cortex-A7 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A7
+		select HAS_MP_OPTION
+	
+	config ARM_CORTEX_A8
+		bool "ARM Cortex-A8 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A8
+	
+	config ARM_CORTEX_A9
+		bool "ARM Cortex-A9 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A9
+		select HAS_MP_OPTION
+	
+	config ARM_CORTEX_A15
+		bool "ARM Cortex-A15 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A15
+		select HAS_MP_OPTION
+		select HAS_CPU_VIRT
+	
+	config ARM_CORTEX_A53
+		bool "ARM Cortex-A53 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A53
+		select ARM_V8
+		select HAS_MP_OPTION
+		select HAS_CPU_VIRT
+		select HAS_64BIT
+	
+	config ARM_CORTEX_A57
+		bool "ARM Cortex-A57 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A57
+		select ARM_V8
+		select HAS_MP_OPTION
+		select HAS_CPU_VIRT
+		select HAS_64BIT
+	
+	config ARM_CORTEX_A72
+		bool "ARM Cortex-A72 CPU"
+		depends on CAN_ARM_CPU_CORTEX_A72
+		select ARM_V8
+		select HAS_MP_OPTION
+		select HAS_CPU_VIRT
+		select HAS_64BIT
+	
+	endchoice
+	
+endif
+if MIPS
+	# SECTION: CPU
+	
+	choice
+		prompt "CPU"
+		default CPU_MIPS32_R2
+	
+	config CPU_MIPS32_R2
+		bool "MIPS32 Release 2"
+		depends on SYS_HAS_CPU_MIPS32_R2 || SYS_HAS_CPU_MIPS64_R2
+		select BIT32
+		select CPU_MIPS32
+		select CPU_MIPSR2
+		help
+		  Choose this if you have a MIPS32 Release 2 CPU.
+	
+	config CPU_MIPS32_R6
+		bool "MIPS32 Release 6"
+		depends on SYS_HAS_CPU_MIPS32_R6 || SYS_HAS_CPU_MIPS64_R6
+		select BIT32
+		select CPU_MIPS32
+		select CPU_MIPSR6
+		select WEAK_ORDERING
+		select LIGHTWEIGHT_BARRIERS
+		help
+		  Choose this if you have a MIPS32 Release 6 CPU and toolchain.
+	
+	config CPU_MIPS64_R2
+		bool "MIPS64 Release 2"
+		depends on SYS_HAS_CPU_MIPS64_R2
+		select BIT64
+		select CPU_MIPS64
+		select CPU_MIPSR2
+		select CONTEXT_8K
+		help
+		  Choose this if you have a MIPS64 Release 2 CPU.
+	
+	config CPU_MIPS64_R6
+		bool "MIPS64 Release 6"
+		depends on SYS_HAS_CPU_MIPS64_R6
+		select BIT64
+		select CPU_MIPS64
+		select CPU_MIPSR6
+		select CONTEXT_8K
+		select WEAK_ORDERING
+		select LIGHTWEIGHT_BARRIERS
+		help
+		  Choose this if you have a MIPS64 Release 6 CPU and toolchain.
+	
+	endchoice
+	
+	choice
+	        prompt "Endianess"
+	        default MIPS_LITTLE_ENDIAN
+	
+	config MIPS_LITTLE_ENDIAN
+	        bool "Little Endian"
+	
+	config MIPS_BIG_ENDIAN
+	        bool "Big Endian"
+	        select BIG_ENDIAN
+	
+	endchoice
+	
+	config WEAK_ORDERING
+		bool
+		prompt "Weakly ordered memory access" \
+		  if HAS_WEAK_ORDERING_OPTION && !CPU_MIPSR6
+		default y
+		help
+		  Choose this if you have a MIPS32 Release 2+ CPU with
+		  weak memory ordering.
+		  Say 'Y' if unsure.
+	
+	config LIGHTWEIGHT_BARRIERS
+		def_bool DEFAULT_LIGHTWEIGHT_BARRIERS
+		prompt "Use lightweight barriers" \
+		  if HAS_LIGHTWEIGHT_BARRIERS_OPTION && !CPU_MIPSR6 && WEAK_ORDERING
+		help
+		  Choose this option if your CPU supports lightweight sync instructions.
+		  In particular sync 0x4, sync 0x10, sync 0x11, sync 0x12, sync 0x13 must
+		  be supported.
+	
+endif
+if PPC32
+	# SECTION: CPU
+	
+	choice
+		prompt "CPU"
+		default PPC32_603e if PPC32
+	
+	config PPC32_603e
+		bool "PowerPC 603e"
+		depends on PPC32
+		help
+		  Choose this if you have an PowerPC 603e CPU.
+	
+	endchoice
+endif
+if SPARC
+	# SECTION: CPU
+	
+	choice
+		prompt "CPU"
+		default LEON3      if SPARC
+	
+	config LEON3
+		bool "Gaisler SPARC LEON3"
+		depends on SPARC
+		help
+		  Choose this if you have a LEON3 CPU.
+	
+	endchoice
+	
+endif
+
+config CPU_VIRT
+	bool "Virtualization"
+	depends on HAS_CPU_VIRT
+	help
+	  Support virtualization extensions provided by CPUs, including
+	  nested paging. This feature allows you to run a virtual machine
+	  monitor (VMM) on top of Fiasco.
+
+choice
+	prompt "Timer tick source"
+	depends on PF_PC || PF_UX
+	default SCHED_APIC
+
+config SCHED_PIT
+	bool "Use PIT for scheduling"
+	depends on (PF_PC || PF_UX) && !MP
+	help
+	  Normally, Fiasco uses the RTC at IRQ8 for scheduling. This can be
+	  disadvantageous in certain circumstances, e.g. VMWare doesn't seem
+	  to emulate the RTC good enough so that not enough timer interrupts
+	  are produced. The PIT mode (using IRQ0) seems to work better in
+	  this case.  It is generally safe to use this option, so if you are
+	  unsure, say 'Y'.
+
+	  Consider that the interrupt priorities change: Using RTC, IRQ8 has
+	  the highest priority. Using PIT, IRQ0 has the highest priority.
+	  The only case where PIT scheduling does not work is with
+	  profiling. If profiling is enabled the PIT is used for generating
+	  the profiling interrupts.
+
+config SCHED_RTC
+	bool "Use RTC for scheduling"
+	depends on PF_PC && !MP
+	help
+	  'Yes' is the standard for this option. If this option is set
+	  Fiasco uses the RTC on IRQ 8 for scheduling.  This can be
+	  disadvantageous in certain circumstances, e.g. VMWare doesn't seem
+	  to emulate the RTC good enough so that not enough timer interrupts
+	  are produced.  The PIT (8254) mode (say 'no' here), seems to work
+	  better in this case. It is generally safe to use the PIT, so if
+	  you are unsure, say 'no'.
+	  Consider that the interrupt priorities change: Using RTC, IRQ8 has
+	  the highest priority. Using PIT, IRQ0 has the highest priority.
+	  The only case where PIT scheduling does not work is with
+	  profiling. If profiling is enabled the PIT is used for generating
+	  the profiling interrupts and the RTC must be used for scheduling.
+	  In the case where profiling shall be used within VMWare the
+	  SLOW_RTC option must be set, so that the timer resolution of
+	  Fiasco is reduced to 100Hz.
+
+config SCHED_APIC
+	bool "Use APIC timer for scheduling"
+	depends on PF_PC
+	help
+	  Use the Local APIC for scheduling.
+
+config SCHED_HPET
+	bool "Use HPET timer for scheduling (EXPERIMENTAL)"
+	depends on PF_PC && !MP && EXPERIMENTAL
+	help
+	  Use the HPET timer for scheduling.
+
+endchoice
+
+config WORKAROUND_AMD_FPU_LEAK
+	bool "Enables workaroud for AMD FPU security leak"
+	depends on PF_PC
+	help
+	  If you use Fiasco for high assurance, high security and use AMD
+	  CPUs you should enable this option. In any other case it is no
+	  harm to disable it.
+
+config REGPARM3
+	def_bool y
+	depends on IA32 && PF_PC
+
+config FPU
+	bool "Enable FPU co-processor" if HAS_FPU_OPTION
+	depends on HAS_FPU_OPTION
+	default y
+	help
+	  Enable this if your platform has hardware floating point support.
+
+# PF_SECTION: TARGET
+if ARM
+	# ARCH:           ARM arm
+	# ARCHDESCR:      ARM processor family
+	#
+	# ARCHSELECT:     BIT32 if !BIT64
+	# ARCHSELECT:     HAS_FPU_OPTION
+	# ARCHSELECT:     FPU if CPU_VIRT
+	# ARCHSELECT:     ARM_LPAE if CPU_VIRT || BIT64
+	# ARCHSELECT:     HAS_SERIAL_OPTION
+	# ARCHSELECT:     HAS_JDB_GZIP_OPTION
+	# ARCHSELECT:     HAS_VIRT_OBJ_SPACE_OPTION if ARM_V6PLUS && !CPU_VIRT && !ARM_1176_CACHE_ALIAS_FIX
+	#
+	# ARCHDEFAULTPF: PF_INTEGRATOR
+	
+	# SECTION: TARGET
+	
+	config HAVE_ARM_SECMONIF_NONE
+		bool
+	
+	config HAVE_ARM_SECMONIF_MC
+		bool
+	
+	
+	config ARM_ALIGNMENT_CHECK
+		bool "Enable alignment check"
+		depends on ARM
+		help
+		  Enable if you want to have alignment check enabled.
+	
+	choice
+		prompt "Execution Model"
+		depends on ARM
+	        default ARM_EM_NS  if DEFAULT_ARM_EM_NS
+	        default ARM_EM_TZ  if DEFAULT_ARM_EM_TZ
+	        default ARM_EM_STD if !DEFAULT_ARM_EM_NS && !DEFAULT_ARM_EM_TZ
+	
+	config ARM_EM_STD
+		bool "Standard mode"
+		help
+		  Systems without ARM TrustZone support, or no specific TrustZone
+		  support.
+	
+	config ARM_EM_NS
+		bool "TrustZone normal side"
+		depends on ARM_1176 || ARM_CORTEX_A7 || ARM_CORTEX_A8 || ARM_CORTEX_A9 || ARM_CORTEX_A15
+		help
+		  In a system with ARM TrustZone extension, run on the normal side.
+	
+	config ARM_EM_TZ
+		bool "TrustZone secure side"
+		depends on !CPU_VIRT
+		depends on ARM_1176 || ARM_CORTEX_A7 || ARM_CORTEX_A8 || ARM_CORTEX_A9 || ARM_CORTEX_A15
+		help
+		  In a system with ARM TrustZone extension, run on the secure side,
+		  and allow monitor services.
+	
+	endchoice
+	
+	choice
+		prompt "Secure Monitor Interface"
+		depends on ARM_EM_NS
+	
+	config ARM_SECMONIF_NONE
+	        bool "None"
+		depends on HAVE_ARM_SECMONIF_NONE
+	        help
+	          Running on a minimal secure monitor that does not require
+	          any interaction (e.g., u-boot for KVM).
+	
+	config ARM_SECMONIF_MC
+		bool "Mobicore"
+		depends on HAVE_ARM_SECMONIF_MC
+	
+	endchoice
+	
+	config BIT64_CHOICE
+		bool "Run Fiasco in 64bit processor mode"
+		default y
+		depends on HAS_64BIT
+		select BIT64
+	
+	config ARM_CACHE_L2CXX0
+		bool "Enable L2 Cache"
+		default y
+		depends on CAN_ARM_CACHE_L2CXX0
+		help 
+		  Enable L2 cache functionality.
+	
+	config ARM_ENABLE_SWP
+		bool "Enable the deprecated 'swp' instruction"
+		depends on ARM_CORTEX_A9 || ARM_CORTEX_A15 || ARM_CORTEX_A7 || ARM_CORTEX_A5
+		help
+		  Enabling this option enables the deprecated 'swp' instruction.
+		  Avoid to enable it.
+	
+	config ARM_LPAE
+	        bool "Use LPAE page table format"
+	        depends on ARM_CORTEX_A15 || ARM_CORTEX_A7 || ARM_V8
+	        help
+	          Use the extended page table format (LPAE).
+	
+	config HAS_ARM_PSCI
+	        bool
+	
+	config ARM_PSCI
+	        bool "Use PSCI"
+	        depends on HAS_ARM_PSCI
+	        help
+	          Use the "Power State Coordination Interface" (PSCI) for system
+	          functions such as booting CPUs.
+	
+	config ARM_1176_CACHE_ALIAS_FIX
+		bool "Use cache restriction to supress aliasing issue on ARM1176"
+		depends on ARM_1176
+		help
+		  The ARM1176 processor might have a memory aliasing problem when
+		  using cache sizes of more than 16kB cache. Enabling this option
+		  enables the workaround of reducing the cache size to 16kB.
+	
+	config ARM_CPU_ERRATA
+	        bool "Enable CPU errata workarounds"
+	        depends on ARM
+	
+endif
+if MIPS
+	# ARCH:           MIPS mips
+	# ARCHDESCR:      MIPS processor family
+	#
+	# ARCHSELECT:     HAS_FPU_OPTION
+	# ARCHSELECT:     HAS_SERIAL_OPTION
+	# ARCHSELECT:     HAS_CPU_VIRT
+	#
+	# ARCHDEFAULTPF:  PF_MALTA
+	
+	# SECTION: TARGET
+	
+	config MIPS_CPU_FREQUENCY
+		int "CPU frequency (MHz)"
+		depends on MIPS
+		default 200
+		help
+		  Set the CPU frequency to match the platform's cpu frequency
+		  for proper time keeping.
+	
+	choice
+	        prompt "Minimum page size"
+	        default MIPS_PAGE_SIZE_16K
+	
+	config MIPS_PAGE_SIZE_4K
+	        bool "4KB minimum page size"
+	
+	config MIPS_PAGE_SIZE_16K
+	        bool "16KB minimum page size"
+	
+	endchoice
+endif
+if PPC32
+	# ARCH:         PPC32 ppc32
+	# ARCHDESCR:    PowerPC 32 processor family (Caution: INCOMPLETE!)
+	#
+	# ARCHDEPENDS:  EXPERIMENTAL && INCLUDE_PPC32
+	# ARCHSELECT:   CONTEXT_4K
+	# ARCHSELECT:   BIG_ENDIAN
+	# ARCHSELECT:   HAS_SERIAL_OPTION
+	# ARCHSELECT:   BIT32
+	#
+	# ARCHHELP: PPC32 testing version, mainly for MPC5200 (603e). Currently,
+	# ARCHHELP: there is no support whatsoever.
+	#
+	# ARCHDEFAULTPF: PF_MP52CXX
+	
+endif
+if SPARC
+	# ARCH:        SPARC sparc
+	# ARCHDESCR:   SPARC v8 processor family (Caution: EXPERIMENTAL)
+	#
+	# ARCHDEPENDS: EXPERIMENTAL && INCLUDE_SPARC
+	# ARCHSELECT:  BIT32
+	# ARCHSELECT:  CONTEXT_4K
+	# ARCHSELECT:  HAS_SERIAL_OPTION
+	#
+	# ARCHHELP:    SPARC v8 is supposed to run on the LEON3 platform.
+	# ARCHHELP:    It is unsupported at the moment.
+	#
+	# ARCHDEFAULTPF: PF_LEON3
+	
+endif
+
+endmenu # target
+
+menu "Kernel options"
+
+config MP
+	bool "Enable multi processor support"
+	depends on HAS_MP_OPTION
+	help
+	  Enable support for machines with multiple processors.
+
+config MP_MAX_CPUS
+	int "Maximal supported number of CPUs"
+	depends on MP
+	range 1 128
+	default 4
+	help
+	  The maximum number of CPUs the kernel supports.
+
+#config ASSEMBLER_IPC_SHORTCUT
+#	bool "Assembler IPC shortcut"
+#	default y
+#	depends on (PF_PC || PF_UX) && !MP
+#	help
+#	  Use the assembler IPC shortcut to get even better short IPC
+#	  performance in the common case.
+
+config CONTEXT_8K
+	bool #"TCB size of 8k"
+	default n
+	help
+	  Use this option to use 8K kernel stacks. Only disable this option
+	  when you know what you're doing.
+
+config CONTEXT_4K
+	bool #"TCB size of 4k"
+	default y if !CONTEXT_8K
+	help
+	  Use this option to use 4K kernel stacks. Only disable this option
+	  when you know what you're doing.
+
+config SLOW_RTC
+	bool "Use RTC with 100 ticks per second"
+	depends on SCHED_RTC
+	help
+	  This option should be enabled if you use VMWare and no PIT
+	  scheduling. The timer resolution is lowered to 100 ticks per
+	  second.
+
+config ONE_SHOT
+	bool "Use scheduling timer in one-shot mode"
+	depends on SCHED_APIC && SYNC_TSC
+	help
+	  More costly than periodic but more fine-granular scheduling
+	  possible.  EXPERIMENTAL!
+
+config SYNC_TSC
+	bool "Use time-stamp counter for KIP and scheduling accounting"
+	depends on PF_PC && (IA32 || AMD64)
+	help
+	  Synchronize the internal kernel clock with the CPU time stamp
+	  counter.
+
+config FINE_GRAINED_CPUTIME
+	bool "Fine-grained CPU time"
+	help
+	  Measure CPU time consumed by a thread from switching to the thread
+	  until switching to another thread. Induces an overhead during each
+	  thread switch, so only activate it for debugging.
+
+config UX_CON
+	bool "Graphical console (requires SDL library!)"
+	depends on PF_UX
+	help
+	  Fiasco-UX can supply a graphical console for the L4 program it is
+	  running.  Enabling this option will build the additional program
+	  but needs the SDL library including development header files
+	  installed.
+
+config UX_NET
+	bool "Network support"
+	depends on PF_UX
+	help
+	  Enabling this option makes Fiasco-UX provide network support for
+	  L4 programs.
+
+choice 
+	prompt "Scheduler"
+	default FIXED_PRIO
+
+config SCHED_FIXED_PRIO
+	bool "Fixed priority scheduler"
+	help
+	  Choose this for the standard fixed priority scheduler with
+	  256 priority levels.
+
+config SCHED_WFQ
+	bool "Weighted fair queueing scheduler"
+	depends on EXPERIMENTAL
+	help
+	  Choose this scheduler for a weighted fair queueing scheduler
+	  running with dynamic priorities.
+
+config SCHED_FP_WFQ
+	bool "Combined fixed priority RT and WFQ scheduler"
+	depends on EXPERIMENTAL
+	help
+	  Combination of Fixed priority and weighted fair queueing
+	  scheduler.
+
+endchoice
+
+config IOMMU
+	bool "Enable support for DMA remapping" if HAS_IOMMU_OPTION
+	depends on HAS_IOMMU_OPTION
+	help
+	  This option enables support for DMA remapping (IO-MMUs).
+	  When this option is enabled and the platform has a supported IO-MMU
+	  the default is to block all DMA from remappable devices.
+	  The user-level must use kernel DMA spaces in combination with
+	  the IO-MMU kernel object to allow DMA.
+
+config DISABLE_VIRT_OBJ_SPACE
+	bool "No virtually mapped array for cap tables" if HAS_VIRT_OBJ_SPACE_OPTION
+	depends on HAS_VIRT_OBJ_SPACE_OPTION &&  EXPERIMENTAL
+
+config VIRT_OBJ_SPACE
+	def_bool y
+	depends on HAS_VIRT_OBJ_SPACE_OPTION
+	depends on !DISABLE_VIRT_OBJ_SPACE
+	depends on !KERNEL_ISOLATION
+
+config KERNEL_ISOLATION
+	bool "Enable Kernel Address-Space Isolation" if AMD64
+	depends on AMD64
+	select NO_LDT
+	select NO_IO_PAGEFAULT
+	select CPU_LOCAL_MAP
+	help
+	  Use an extra address space (page table) for the microkernel.
+	  Only map a small trampoline and some static code and data into
+	  each user address space and keep the kernel in its own address
+	  space. This mitigates the deferred access rights check of some
+	  Intel CPUs during speculative execution. However, there is the
+	  extra TLB penalty for each system call.
+
+config CPU_LOCAL_MAP
+	bool "Enable CPU local page-tables for kernel mappings" if AMD64 && !KERNEL_ISOLATION
+	depends on AMD64
+	help
+	  Enable to use per CPU page directories to allow CPU-local
+	  mapping of kernel memory. This is used for kernel isolation
+	  etc.
+	  
+	  If unsure say N.
+
+config INTEL_IA32_BRANCH_BARRIERS
+	bool "Enable strict prediction barriers (IBRS,IBPB,STIBP)" if AMD64 && KERNEL_ISOLATION
+	depends on AMD64 && KERNEL_ISOLATION
+	help
+	  Use indirect branch prediction barriers to prevent
+	  speculation-based cache timing side-channels.
+	  This option enables Intel specific indirect branch control
+	  mitigation:
+	    (a) IBRS on all kernel entries to prevent in-kernel
+	        prediction attacks.
+	    (b) STIBP to prevent cross hyper-thred attacks.
+	    (c) IBPB after address space switches to prevent cross
+	        application attacks.
+
+config NO_IO_PAGEFAULT
+	bool "Disable IO-Port fault IPC" if (IA32 || AMD64) && !KERNEL_ISOLATION
+	depends on IA32 || AMD64
+	default y if  IA32 || AMD64
+	help
+	  Disable page-fault IPC for IO-Port accesses. If this option is
+	  eanbled the kernel does not generate page-fault IPC for failed
+	  IO-Port accesses instead an excpetion IPC with a #GP is generated.
+
+config NO_LDT
+	bool "Disable support for the LDT" if (IA32 || AMD64) && !KERNEL_ISOLATION
+	depends on IA32 || AMD64
+	default y if IA32 || AMD64
+	help
+	  This option disables support for the X86 local descriptor
+	  table (LDT).  This reduces some overhead. However, this
+	  also makes the use of the LDT in L4Linux impossible.
+
+# PF_SECTION: KERNEL
+
+endmenu # kernel options
+
+menu "Debugging"
+
+config INLINE
+	bool "Generate inline code"
+	default y
+	help
+	  Inlining specifies that it is desirable for the compiler to
+	  integrate functions declared 'inline' into the calling routine.
+	  This usually leads to faster code, so unless you want to debug the
+	  kernel you should say 'Y' here.
+
+config NDEBUG
+	bool "Do not compile assertions"
+	help
+	  Don't insert assertions into the code. Should be enabled for
+	  kernels which are used for measurements.
+
+config NO_FRAME_PTR
+	bool "Compile without frame pointer"
+	default y
+	help
+	  Enabling this option optimizes for speed but makes debugging more
+	  difficult.
+
+config STACK_DEPTH
+	bool "Measure stack depth of threads"
+	help
+	  When this option is enabled, each thread control block is marked
+	  with magic numbers while creation. The function ``show thread
+	  lists'' scans the TCB for these magic numbers and shows the
+	  currently used depth of each thread.
+
+config LIST_ALLOC_SANITY
+	bool "Sanity checks in low level allocator"
+	help
+	  When this option is enabled the low level memory allocator does
+	  extra sanity checks on its data structures before and after every
+	  operation. This can help detect flaws like double frees or memory
+	  corruption by other means.
+
+	  These tests are very expensive so only enable them if a problem
+	  with memory allocation is expected.
+
+config BEFORE_IRET_SANITY
+	bool "Sanity checks at syscall entry/exit"
+	depends on PF_PC
+	help
+	  Perform the following additional sanity checks before returning to
+	  usermode:
+	    - Does the thread hold any locks?
+	    - Is the thread locked by any other thread?
+	    - Does the thread have the right state:
+	      * Thread_ready must be set.
+	      * Thread_cancel and Thread_fpu_owner might be set.
+	      * Any other state bit must not be set.
+	  Don't use Fiasco compiled with this option for performance analysis!
+
+config GSTABS
+	bool "Compile with gstabs+ debugging information"
+	depends on n
+	help
+	  Enabling this option includes the debugging information using the
+	  older gstabs+ format into the kernel image. This is necessary to
+	  access line number information of the kernel from JDB.
+
+config IRQ_SPINNER
+	bool "Display IRQ activity on VGA screen"
+	depends on PF_PC
+	help
+	  Display IRQ activity on VGA screen.
+
+config WATCHDOG
+	bool "Enable Watchdog support" if HAS_WATCHDOG_OPTION
+	default y if HAS_WATCHDOG_OPTION
+	depends on HAS_WATCHDOG_OPTION
+	help
+	  Enable support for watchdog using the builtin Local APIC and a
+	  performance counter. The watchdog can be enabled using the
+	  -watchdog command line option.
+
+config SERIAL
+	bool "Support for debugging over serial line" if HAS_SERIAL_OPTION
+	depends on HAS_SERIAL_OPTION
+	default y if HAS_SERIAL_OPTION
+	help
+	  This option enables support for input/output over serial interface.
+
+menuconfig JDB
+	bool "JDB kernel debugger"
+	default y
+	help
+	  The powerful Fiasco kernel debugger.
+
+if JDB
+
+config JDB_LOGGING
+	bool "JDB extended logging"
+	default y if !PF_UX
+	help
+	  There are two classes of logging events: Basic events don't
+	  consume any time if they are disabled (ipc, ipc result,
+	  pagefaults, unmap). Extended logging events add an additional
+	  overhead of most probably less than 10 cycles if they are
+	  disabled. These events can be activated/deactivated by the 'O'
+	  command in jdb.
+
+	  Should be disabled for kernels which are used for measurements.
+
+config JDB_DISASM
+	bool "JDB disassembler" if HAS_JDB_DISASM_OPTION
+	default y if HAS_JDB_DISASM_OPTION
+	help
+	  Add support for disassembly. Increases memory foot-print, only
+	  enable when needed.
+
+config JDB_GZIP
+	bool "GZIP compressed dumps" if HAS_JDB_GZIP_OPTION
+	default y if HAS_JDB_GZIP_OPTION
+	help
+	  Add supprt for gzip compressed dumps of the trace buffer.
+	  Increases memory foot-print, only enabled when needed.
+
+config JDB_ACCOUNTING
+	bool "JDB accounting"
+	help
+	  Enable accounting information about IPCs, context switches, page
+	  faults, and other events. The counters are accessible from
+	  userland through the tbuf status page.
+
+	  Should be disabled for kernels which are used for measurements.
+
+config JDB_MISC
+	bool "Miscellaneous JDB modules"
+	depends on PF_UX || PF_PC
+
+endif # JDB
+
+
+config POWERSAVE_GETCHAR
+	bool "Save power in getchar()"
+	default y
+	depends on PF_PC
+	help
+	  This option uses a processor HALT in getchar() to save power and
+	  prevent some P4 processors from being overheated. This option
+	  requires a working timer IRQ to wakeup getchar periodically.
+
+choice
+	prompt "Warn levels"
+	default WARN_WARNING
+
+config WARN_NONE
+	bool "Do not show show any kernel warning"
+
+config WARN_WARNING
+	bool "Show messages of warning level"
+
+config WARN_ANY
+	bool "Show all kernel warnings"
+
+endchoice # warn levels
+
+# PF_SECTION: DEBUG
+if ARM
+	# SECTION: DEBUG
+	
+	menu "ARM debugging options"
+	
+	config VMEM_ALLOC_TEST
+		bool "Run test for Vmem_alloc allocator"
+		depends on ARM
+	
+	config DEBUG_KERNEL_PAGE_FAULTS
+		bool "Debugging of kernel page-faults"
+		depends on ARM
+		help
+		  This option enables logging of kernel page-faults (aka page faults
+		  from kernel mode). The page faults are logged to the normal
+		  console in the format *KP[pfa, error_code, ip].
+	
+	endmenu
+endif
+
+endmenu # debugging
+
+menu "Compiling"
+
+config CC
+	string "C compiler"
+	default "gcc"
+	help
+	  Use this option to override the default C compiler (gcc).
+
+config CXX
+	string "C++ compiler"
+	default "g++"
+	help
+	  Use this option to override the default C++ compiler (g++).
+
+config HOST_CC
+	string "C host compiler"
+	default "gcc"
+	help
+	  Use this option to override the default C host compiler (gcc).
+
+config HOST_CXX
+	string "C++ host compiler"
+	default "g++"
+	help
+	  Use this option to override the default C++ host compiler (g++).
+
+config MAINTAINER_MODE
+	bool "Do additional checks at build time"
+	help
+	  This enables the circular dependency and initcall checks.
+	  Say 'Yes' here if you do kernel hacking.
+
+config LABEL
+	string "Configuration label"
+	help
+	  Text string with a name for this configuration. To be displayed in
+	  the kernel boot-up.
+
+endmenu
+
+config EXPERIMENTAL
+	bool "Prompt for experimental features"
+	help
+	  Experimental features are available when enabling this option.
+	  Enabling these features might be less than fully secure and may
+	  disrupt the stability of your kernel.
+
+	  Use with caution!
+
+config PERF_CNT
+	def_bool y if JDB && (IA32 || AMD64 || ARM || ARM64 || MIPS)
+
+config BIT32
+	bool
+
+config BIT64
+	select CONTEXT_8K
+	bool
+
+config WARN_LEVEL
+	int
+	default 2 if WARN_ANY
+	default 1 if WARN_WARNING
+	default 0 if WARN_NONE
+
+config XARCH
+	string
+	default "ux" if PF_UX
+	default "amd64" if AMD64 && PF_PC
+	default "ia32" if IA32 && PF_PC
+# ARCH_NAME
+	default "arm"  if ARM
+	default "mips"  if MIPS
+	default "ppc32"  if PPC32
+	default "sparc"  if SPARC
+
+config ABI
+	string
+	default "vf"

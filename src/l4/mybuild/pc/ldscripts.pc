@@ -1,0 +1,7 @@
+Name: ldscripts
+Version: 0
+Description: L4 library
+
+Requires:  
+Link_Start= %{nocrt1|shared:; :%:search(crt1.o %(libdir))} %:search(crti%{shared:.s}.o %(libdir)) %{static:%:if-exists(%:search(crtbeginT.o %(gcclibdir)) %:search(crtbegin.o %(gcclibdir)));shared:%:search(crtbeginS.o %(gcclibdir));:%:search(crtbegin.o %(gcclibdir))}
+Link_End=   %:search(%{shared:crtendS.o;:crtend.o} %(gcclibdir)) %:search(crtn%{shared:.s}.o %(libdir))

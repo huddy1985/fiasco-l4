@@ -1,0 +1,7 @@
+Name: libc_be_fs_noop
+Version: 0
+Description: L4 library
+
+Libs: -lc_be_fs_noop
+Requires:  
+Link_Libs= %{static:-lc_be_fs_noop}

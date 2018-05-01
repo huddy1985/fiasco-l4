@@ -1,0 +1,6 @@
+Name: libinitcwd
+Version: 0
+Description: L4 library
+
+Libs: -linitcwd
+Requires:  

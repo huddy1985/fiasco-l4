@@ -1,0 +1,6 @@
+Name: input
+Version: 0
+Description: L4 library
+
+Libs: -linput
+Requires: libio libirq l4util libc libpthread  

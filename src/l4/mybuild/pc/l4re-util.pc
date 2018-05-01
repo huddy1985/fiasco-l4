@@ -1,0 +1,6 @@
+Name: l4re-util
+Version: 0
+Description: L4 library
+
+Libs: -l4re-util
+Requires: l4re  

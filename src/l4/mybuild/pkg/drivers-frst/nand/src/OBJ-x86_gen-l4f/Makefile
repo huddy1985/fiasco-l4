@@ -1,0 +1,31 @@
+L4DIR=/media/fedora_work/project/real-time/l4re/src/l4
+OBJ_BASE=/media/fedora_work/project/real-time/l4re/src/l4/mybuild
+OBJ_DIR=/media/fedora_work/project/real-time/l4re/src/l4/mybuild/pkg/drivers-frst/nand/src
+SRC_DIR=/media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+PKGDIR=/media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst
+PKGDIR_ABS=/media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst
+PKGDIR_OBJ=/media/fedora_work/project/real-time/l4re/src/l4/mybuild/pkg/drivers-frst
+MAKECONFLOCAL=/media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src/Makeconf.local
+OSYSTEM=x86-l4f
+SYSTEM=x86_gen-l4f
+ARCH=x86
+CPU=gen
+L4API=l4f
+vpath %.c /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.cc /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.cpp /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.f /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.F /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.f90 /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.F90 /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.f95 /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.F95 /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.S /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.y /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.l /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.ld /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.dpe /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+vpath %.dts /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src
+.general.d: /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src/Makefile
+include /media/fedora_work/project/real-time/l4re/src/l4/pkg/drivers-frst/nand/src/Makefile
+include $(L4DIR)/mk/lib.mk

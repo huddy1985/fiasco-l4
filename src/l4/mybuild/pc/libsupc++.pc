@@ -1,0 +1,8 @@
+incdir=/empty_incdir
+Name: libsupc++
+Version: 0
+Description: L4 library
+Cflags: -I${incdir}/libstdc++-v3 
+Libs: -lsupc++
+Requires: libc libpthread  
+Link_Libs= %{static:-lsupc++}

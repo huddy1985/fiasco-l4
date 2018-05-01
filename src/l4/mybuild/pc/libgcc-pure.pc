@@ -1,0 +1,6 @@
+Name: libgcc-pure
+Version: 0
+Description: L4 library
+
+Libs: -lgcc
+Requires:  

@@ -1,0 +1,4 @@
+Name: libio
+Version: 0
+Description: Alias Dependency Package
+Requires: libio-io

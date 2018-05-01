@@ -1,0 +1,6 @@
+Name: libstdc++_minimal
+Version: 0
+Description: L4 library
+
+Libs: -lstdc++_minimal
+Requires: libsupc++_minimal  

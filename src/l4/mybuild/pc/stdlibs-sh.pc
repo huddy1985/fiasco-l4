@@ -1,0 +1,4 @@
+Name: stdlibs-sh
+Version: 0
+Description: Alias Dependency Package
+Requires: stdlibs-all ldso libdl libc_support_misc libc_be_socket_noop

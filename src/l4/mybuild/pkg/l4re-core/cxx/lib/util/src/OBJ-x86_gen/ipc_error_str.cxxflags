@@ -1,0 +1,1 @@
+CXXFLAGS_ipc_error_str.cc := -DL4_NO_RTTI -Wall -fno-exceptions -fno-rtti

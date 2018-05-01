@@ -1,0 +1,6 @@
+Name: cxx_base_e
+Version: 0
+Description: L4 library
+
+Libs: -lcxx_base_e
+Requires: cxx_io  

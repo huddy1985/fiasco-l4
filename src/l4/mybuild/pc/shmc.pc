@@ -1,0 +1,6 @@
+Name: shmc
+Version: 0
+Description: L4 library
+
+Libs: -l4shmc
+Requires: l4re_c l4re_c-util  

@@ -1,0 +1,6 @@
+Name: libl4revfs-fs-fuxfs
+Version: 0
+Description: L4 library
+
+Libs: -ll4revfs-fs-fuxfs
+Requires: lxfuxlibc  

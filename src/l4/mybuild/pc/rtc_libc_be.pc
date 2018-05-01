@@ -1,0 +1,6 @@
+Name: rtc_libc_be
+Version: 0
+Description: L4 library
+
+Libs: -lc_be_rtc
+Requires: rtc  

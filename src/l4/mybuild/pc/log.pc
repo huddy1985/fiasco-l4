@@ -1,0 +1,6 @@
+Name: log
+Version: 0
+Description: L4 library
+
+Libs: -l4log
+Requires:  

@@ -1,0 +1,1 @@
+PREPROCESS_PARTS += ia32 pf_pc abi_vf sched_apic regparm3 context_4k sched_fixed_prio virt_obj_space no_io_pagefault no_ldt inline no_frame_ptr watchdog serial jdb jdb_logging jdb_disasm jdb_gzip powersave_getchar warn_warning perf_cnt bit32

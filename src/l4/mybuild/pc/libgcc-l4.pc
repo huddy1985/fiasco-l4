@@ -1,0 +1,6 @@
+Name: libgcc-l4
+Version: 0
+Description: L4 library
+
+Libs: -lgcc-l4
+Requires:  
